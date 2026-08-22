@@ -1,0 +1,59 @@
+name: Part 1 Repository Validation
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  validate-structure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check docs folder exists
+        run: |
+          if [ ! -d "docs" ]; then
+            echo "docs folder is missing"
+            exit 1
+          fi
+          echo "docs folder found"
+
+      - name: Check ERD is present
+        run: |
+          if [ ! -f "docs/ERD.png" ] && [ ! -f "docs/ERD.pdf" ]; then
+            echo "ERD file is missing from docs folder"
+            exit 1
+          fi
+          echo "ERD file found"
+
+      - name: Check API endpoint plan is present
+        run: |
+          if [ ! -f "docs/API-Endpoint-Plan.md" ] && [ ! -f "docs/API-Endpoint-Plan.pdf" ]; then
+            echo "API endpoint plan is missing from docs folder"
+            exit 1
+          fi
+          echo "API endpoint plan found"
+
+      - name: Check SQL script is present
+        run: |
+          sqlFile=$(find docs -maxdepth 1 -iname "*.sql" | head -n 1)
+          if [ -z "$sqlFile" ]; then
+            echo "SQL script is missing from docs folder"
+            exit 1
+          fi
+          echo "SQL script found: $sqlFile"
+
+      - name: Check README exists
+        run: |
+          if [ ! -f "README.md" ]; then
+            echo "README.md is missing from the repository root"
+            exit 1
+          fi
+          echo "README.md found"
+
+      - name: Repository structure valid
+        run: echo "All required Part 1 files are present, structure check passed"
