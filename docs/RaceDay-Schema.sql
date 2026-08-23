@@ -85,3 +85,48 @@ CREATE TABLE Categories (
     CONSTRAINT CK_Categories_DistanceKm CHECK (DistanceKm IS NULL OR DistanceKm > 0)
 );
 GO
+-- Enrolments table, links a Participant to an event and the category they chose
+CREATE TABLE Enrolments (
+    EnrolmentId     INT IDENTITY(1,1) NOT NULL,
+    ParticipantId   INT NOT NULL,
+    EventId         INT NOT NULL,
+    CategoryId      INT NOT NULL,
+    EnrolmentDate   DATETIME NOT NULL,
+    Status          VARCHAR(20) NOT NULL,
+    CONSTRAINT PK_Enrolments PRIMARY KEY (EnrolmentId),
+    CONSTRAINT DF_Enrolments_EnrolmentDate DEFAULT (GETDATE()) FOR EnrolmentDate,
+    CONSTRAINT DF_Enrolments_Status DEFAULT ('Pending') FOR Status,
+    CONSTRAINT FK_Enrolments_Users FOREIGN KEY (ParticipantId) REFERENCES Users(UserId),
+    CONSTRAINT FK_Enrolments_Events FOREIGN KEY (EventId) REFERENCES Events(EventId),
+    CONSTRAINT FK_Enrolments_Categories FOREIGN KEY (CategoryId) REFERENCES Categories(CategoryId),
+    CONSTRAINT UQ_Enrolments_ParticipantEvent UNIQUE (ParticipantId, EventId),
+    CONSTRAINT CK_Enrolments_Status CHECK (Status IN ('Pending','Confirmed','Cancelled'))
+);
+GO
+
+-- Results table, one result per enrolment, captured by the Organiser after the event
+CREATE TABLE Results (
+    ResultId        INT IDENTITY(1,1) NOT NULL,
+    EnrolmentId     INT NOT NULL,
+    FinishTime      TIME NOT NULL,
+    FinishPosition  INT NOT NULL,
+    CapturedAt      DATETIME NOT NULL,
+    CONSTRAINT PK_Results PRIMARY KEY (ResultId),
+    CONSTRAINT UQ_Results_EnrolmentId UNIQUE (EnrolmentId),
+    CONSTRAINT DF_Results_CapturedAt DEFAULT (GETDATE()) FOR CapturedAt,
+    CONSTRAINT FK_Results_Enrolments FOREIGN KEY (EnrolmentId) REFERENCES Enrolments(EnrolmentId) ON DELETE CASCADE,
+    CONSTRAINT CK_Results_FinishPosition CHECK (FinishPosition > 0)
+);
+GO
+
+-- INDEXES
+-- Speeds up the lookups the API will run most often, such as fetching
+-- all events for an organiser or all enrolments for a participant
+
+CREATE INDEX IX_Users_RoleId ON Users(RoleId);
+CREATE INDEX IX_Events_OrganiserId ON Events(OrganiserId);
+CREATE INDEX IX_Categories_EventId ON Categories(EventId);
+CREATE INDEX IX_Enrolments_EventId ON Enrolments(EventId);
+CREATE INDEX IX_Enrolments_ParticipantId ON Enrolments(ParticipantId);
+CREATE INDEX IX_Enrolments_CategoryId ON Enrolments(CategoryId);
+GO
