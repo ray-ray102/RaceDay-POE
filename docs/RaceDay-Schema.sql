@@ -130,3 +130,30 @@ CREATE INDEX IX_Enrolments_EventId ON Enrolments(EventId);
 CREATE INDEX IX_Enrolments_ParticipantId ON Enrolments(ParticipantId);
 CREATE INDEX IX_Enrolments_CategoryId ON Enrolments(CategoryId);
 GO
+-- SEED DATA
+-- Covers every table, 2 Organisers, 2 Participants, 3 Events,
+-- categories for each event, sample enrolments and sample results
+
+-- Roles
+INSERT INTO Roles (RoleName) VALUES
+('Organiser'),
+('Participant');
+GO
+
+-- Users, two Organisers and two Participants
+-- Password hashes below are placeholders, the real API will hash passwords properly in Part 2
+INSERT INTO Users (RoleId, FirstName, LastName, Email, PasswordHash, PhoneNumber, ProfilePictureUrl, CreatedAt)
+VALUES
+(1, 'Thabo', 'Nkosi', 'thabo.nkosi@raceday.co.za', 'AQAAAAIAAYagAAAAEHashPlaceholder1==', '0821234567', NULL, GETDATE()),
+(1, 'Amanda', 'Botha', 'amanda.botha@raceday.co.za', 'AQAAAAIAAYagAAAAEHashPlaceholder2==', '0837654321', NULL, GETDATE()),
+(2, 'Sipho', 'Dlamini', 'sipho.dlamini@gmail.com', 'AQAAAAIAAYagAAAAEHashPlaceholder3==', '0721112222', NULL, GETDATE()),
+(2, 'Lerato', 'Matlala', 'lerato.matlala@gmail.com', 'AQAAAAIAAYagAAAAEHashPlaceholder4==', '0739998888', NULL, GETDATE());
+GO
+
+-- Events, three events owned by the two Organisers, one of each event type
+INSERT INTO Events (OrganiserId, Name, Description, EventDate, Location, DistanceKm, EventType, BannerImageUrl, CreatedAt)
+VALUES
+(1, 'Joburg City Run', 'A morning road run through the streets of Johannesburg with routes for every level', '2026-10-04 06:00:00', 'Sandton, Johannesburg', 10.0, 'Run', NULL, GETDATE()),
+(1, 'Cape Winelands Cycle Challenge', 'A scenic cycling event through the vineyards outside Stellenbosch', '2026-11-15 06:30:00', 'Stellenbosch, Western Cape', 60.0, 'Cycle', NULL, GETDATE()),
+(2, 'Durban Beachfront Park Walk', 'A family friendly walk along the Durban beachfront in support of local charities', '2026-09-20 07:00:00', 'North Beach, Durban', 5.0, 'Walk', NULL, GETDATE());
+GO
