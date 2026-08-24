@@ -157,3 +157,22 @@ VALUES
 (1, 'Cape Winelands Cycle Challenge', 'A scenic cycling event through the vineyards outside Stellenbosch', '2026-11-15 06:30:00', 'Stellenbosch, Western Cape', 60.0, 'Cycle', NULL, GETDATE()),
 (2, 'Durban Beachfront Park Walk', 'A family friendly walk along the Durban beachfront in support of local charities', '2026-09-20 07:00:00', 'North Beach, Durban', 5.0, 'Walk', NULL, GETDATE());
 GO
+-- Categories, at least two per event, six in total
+INSERT INTO Categories (EventId, Name, Description, MinAge, MaxAge, DistanceKm)
+VALUES
+(1, '10km Open', 'Open category for the full 10km route', 16, NULL, 10.0),
+(1, '5km Fun Run', 'Shorter route for beginners and families', NULL, NULL, 5.0),
+(2, '60km Challenge', 'Full distance for experienced cyclists', 18, NULL, 60.0),
+(2, '30km Social Ride', 'Shorter, more relaxed distance', 14, NULL, 30.0),
+(3, 'Under 20', 'Youth category', NULL, 19, 5.0),
+(3, 'Senior', 'Participants aged 50 and older', 50, NULL, 5.0);
+GO
+
+-- Enrolments, sample enrolments linking Participants, events and categories
+INSERT INTO Enrolments (ParticipantId, EventId, CategoryId, EnrolmentDate, Status)
+VALUES
+(3, 1, 1, GETDATE(), 'Confirmed'),
+(4, 1, 2, GETDATE(), 'Confirmed'),
+(3, 2, 3, GETDATE(), 'Pending'),
+(4, 3, 5, GETDATE(), 'Confirmed');
+GO
