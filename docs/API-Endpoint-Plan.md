@@ -59,3 +59,12 @@ system depends on knowing whether a user is an Organiser or a Participant.
   "role": "Participant"
 }
 ```
+**Example successful login response**
+```json
+{
+  "userId": 3,
+  "firstName": "Sipho",
+  "lastName": "Dlamini",
+  "role": "Participant"
+}
+```
