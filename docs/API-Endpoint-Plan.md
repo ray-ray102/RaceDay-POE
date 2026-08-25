@@ -36,3 +36,26 @@ who you are", 403 means "we know who you are, but you are not allowed to do this
 | 401 Unauthorized | No valid session | The user is not logged in |
 | 403 Forbidden | Valid session, wrong role or not the owner | A Participant calling an Organiser only endpoint, or an Organiser trying to edit someone else's event |
 | 404 Not Found | The resource does not exist | Invalid id in the route, such as an event that was deleted |
+## 1. Authentication
+
+Handles account creation and starting or ending a session. Every user registers with a role,
+this decision cannot be changed later without going through an administrator, since the whole
+system depends on knowing whether a user is an Organiser or a Participant.
+
+| HTTP Method | Route | Description | Role Required | Request Body | Expected Response |
+|---|---|---|---|---|---|
+| POST | /api/auth/register | Creates a new user account as either an Organiser or a Participant. The password is hashed before it is stored, it is never saved in plain text. | None (public) | { "firstName", "lastName", "email", "password", "phoneNumber", "role" } | 201 Created - returns the new user's id, name and role. 400 Bad Request - validation failed, email already in use, or role is not Organiser or Participant. |
+| POST | /api/auth/login | Verifies a user's email and password against the stored hash, then starts a session and stores the user id and role server-side. | None (public) | { "email", "password" } | 200 OK - returns basic user details and role, session cookie set on the response. 401 Unauthorized - email or password incorrect. |
+| POST | /api/auth/logout | Ends the current session for the logged in user, clearing the stored user id and role. | Any (logged in) | None | 200 OK - session cleared, subsequent requests are treated as logged out. |
+
+**Example register request body**
+```json
+{
+  "firstName": "Sipho",
+  "lastName": "Dlamini",
+  "email": "sipho.dlamini@gmail.com",
+  "password": "MySecurePassword123",
+  "phoneNumber": "0721112222",
+  "role": "Participant"
+}
+```
