@@ -25,3 +25,14 @@ If a request is made to a protected endpoint without a valid session, the API re
 **401 Unauthorized**. If the session is valid but the role does not match what the endpoint
 requires, the API returns **403 Forbidden**. This distinction matters, 401 means "we don't know
 who you are", 403 means "we know who you are, but you are not allowed to do this".
+## HTTP Status Codes Used Throughout This Plan
+
+| Code | Meaning | When it is used in RaceDay |
+|---|---|---|
+| 200 OK | Request succeeded | Successful GET, PUT or logout requests |
+| 201 Created | A new resource was created | Successful POST requests that add a new row, such as registering or creating an event |
+| 204 No Content | Request succeeded, nothing to return | Successful DELETE requests |
+| 400 Bad Request | The request was invalid | Missing fields, validation failed, duplicate email, already enrolled |
+| 401 Unauthorized | No valid session | The user is not logged in |
+| 403 Forbidden | Valid session, wrong role or not the owner | A Participant calling an Organiser only endpoint, or an Organiser trying to edit someone else's event |
+| 404 Not Found | The resource does not exist | Invalid id in the route, such as an event that was deleted |
