@@ -183,3 +183,18 @@ VALUES
 (1, '00:52:18', 47, GETDATE()),
 (2, '00:31:05', 12, GETDATE());
 GO
+-- VERIFICATION
+-- !!Run this on its own after the script finishes to confirm every
+
+SELECT 'Roles' AS TableName, COUNT(*) AS RowCount FROM Roles
+UNION ALL
+SELECT 'Users', COUNT(*) FROM Users
+UNION ALL
+SELECT 'Events', COUNT(*) FROM Events
+UNION ALL
+SELECT 'Categories', COUNT(*) FROM Categories
+UNION ALL
+SELECT 'Enrolments', COUNT(*) FROM Enrolments
+UNION ALL
+SELECT 'Results', COUNT(*) FROM Results;
+GO
