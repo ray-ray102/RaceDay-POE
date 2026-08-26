@@ -68,3 +68,41 @@ system depends on knowing whether a user is an Organiser or a Participant.
   "role": "Participant"
 }
 ```
+## 2. User Profile
+
+Both roles share the same profile endpoints, since a Users record holds the same core fields
+for an Organiser or a Participant. The API works out which user is calling from the session, so
+these routes never take a user id in the path, only /me is used.
+
+| HTTP Method | Route | Description | Role Required | Request Body | Expected Response |
+|---|---|---|---|---|---|
+| GET | /api/users/me | Returns the profile details of the currently logged in user, including their role. | Any (logged in) | None | 200 OK - user profile object, password hash is never included in the response. 401 Unauthorized - no active session. |
+| PUT | /api/users/me | Updates the profile details of the currently logged in user, such as name, phone number and profile picture URL. Email and role cannot be changed through this endpoint. | Any (logged in) | { "firstName", "lastName", "phoneNumber", "profilePictureUrl" } | 200 OK - updated profile returned. 400 Bad Request - validation failed, such as an empty first name. |
+
+**Example profile response**
+```json
+{
+  "userId": 3,
+  "firstName": "Sipho",
+  "lastName": "Dlamini",
+  "email": "sipho.dlamini@gmail.com",
+  "phoneNumber": "0721112222",
+  "profilePictureUrl": null,
+  "role": "Participant"
+}
+```
+## 3. Events
+
+Events are owned by the Organiser who created them. Anyone can browse events, but only the
+owning Organiser can change or remove one, this ownership check happens on every write endpoint
+below, not just the role check, since two different Organisers must not be able to edit each
+other's events.
+
+| HTTP Method | Route | Description | Role Required | Request Body | Expected Response |
+|---|---|---|---|---|---|
+| GET | /api/events | Lists all upcoming events, viewable by anyone. Supports optional query string filters. | None (public) | None | 200 OK - array of event summaries. |
+| GET | /api/events/{id} | Returns the full detail for a single event, including its list of categories. | None (public) | None | 200 OK - event detail object with a nested categories array. 404 Not Found - event does not exist. |
+| POST | /api/events | Creates a new event owned by the logged in Organiser, the OrganiserId is taken from the session, not from the request body. | Organiser | { "name", "description", "eventDate", "location", "distanceKm", "eventType", "bannerImageUrl" } | 201 Created - the new event object. 400 Bad Request - validation failed, such as eventType not being Run, Walk or Cycle. |
+| PUT | /api/events/{id} | Updates an existing event. Only the Organiser who owns the event may edit it. | Organiser | { "name", "description", "eventDate", "location", "distanceKm", "eventType", "bannerImageUrl" } | 200 OK - updated event. 403 Forbidden - logged in Organiser does not own this event. 404 Not Found - event does not exist. |
+| DELETE | /api/events/{id} | Deletes an event owned by the logged in Organiser, this will fail if the event still has active enrolments, since the database enforces that link. | Organiser | None | 204 No Content - deleted successfully. 400 Bad Request - event still has enrolments and cannot be deleted. 403 Forbidden - not the owning Organiser. 404 Not Found - event does not exist. |
+| GET | /api/events/mine | Lists all events created by the logged in Organiser, along with a count of enrolments per event, used to build the Organiser dashboard in Part 3. | Organiser | None | 200 OK - array of the Organiser's own events with enrolment counts. |
