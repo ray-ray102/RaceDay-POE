@@ -176,3 +176,10 @@ VALUES
 (3, 2, 3, GETDATE(), 'Pending'),
 (4, 3, 5, GETDATE(), 'Confirmed');
 GO
+-- Results, sample finish times for the enrolments that have already taken place
+-- only confirmed enrolments that finished get a result, this matches the real workflow
+INSERT INTO Results (EnrolmentId, FinishTime, FinishPosition, CapturedAt)
+VALUES
+(1, '00:52:18', 47, GETDATE()),
+(2, '00:31:05', 12, GETDATE());
+GO
