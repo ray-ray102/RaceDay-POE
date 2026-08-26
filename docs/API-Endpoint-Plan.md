@@ -106,3 +106,29 @@ other's events.
 | PUT | /api/events/{id} | Updates an existing event. Only the Organiser who owns the event may edit it. | Organiser | { "name", "description", "eventDate", "location", "distanceKm", "eventType", "bannerImageUrl" } | 200 OK - updated event. 403 Forbidden - logged in Organiser does not own this event. 404 Not Found - event does not exist. |
 | DELETE | /api/events/{id} | Deletes an event owned by the logged in Organiser, this will fail if the event still has active enrolments, since the database enforces that link. | Organiser | None | 204 No Content - deleted successfully. 400 Bad Request - event still has enrolments and cannot be deleted. 403 Forbidden - not the owning Organiser. 404 Not Found - event does not exist. |
 | GET | /api/events/mine | Lists all events created by the logged in Organiser, along with a count of enrolments per event, used to build the Organiser dashboard in Part 3. | Organiser | None | 200 OK - array of the Organiser's own events with enrolment counts. |
+**Optional query string filters on GET /api/events**
+
+| Parameter | Example | Effect |
+|---|---|---|
+| eventType | ?eventType=Run | Only returns events of that type |
+| location | ?location=Durban | Only returns events whose location contains this text |
+| fromDate | ?fromDate=2026-09-01 | Only returns events on or after this date |
+
+**Example event detail response**
+```json
+{
+  "eventId": 1,
+  "organiserId": 1,
+  "name": "Joburg City Run",
+  "description": "A morning road run through the streets of Johannesburg",
+  "eventDate": "2026-10-04T06:00:00",
+  "location": "Sandton, Johannesburg",
+  "distanceKm": 10.0,
+  "eventType": "Run",
+  "bannerImageUrl": null,
+  "categories": [
+    { "categoryId": 1, "name": "10km Open", "distanceKm": 10.0 },
+    { "categoryId": 2, "name": "5km Fun Run", "distanceKm": 5.0 }
+  ]
+}
+```
