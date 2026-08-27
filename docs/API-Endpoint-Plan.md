@@ -132,3 +132,26 @@ other's events.
   ]
 }
 ```
+## 4. Categories
+
+Categories always belong to exactly one event, this is why every category route sits either
+under /api/events/{eventId}/categories for creating and listing, or under /api/categories/{id}
+directly for reading, updating or deleting a single category once you already know its id.
+
+| HTTP Method | Route | Description | Role Required | Request Body | Expected Response |
+|---|---|---|---|---|---|
+| GET | /api/events/{eventId}/categories | Lists all categories that belong to a specific event. | None (public) | None | 200 OK - array of categories. 404 Not Found - event does not exist. |
+| GET | /api/categories/{id} | Returns a single category by id. | None (public) | None | 200 OK - category object. 404 Not Found - category does not exist. |
+| POST | /api/events/{eventId}/categories | Adds a new age or distance category to an event owned by the logged in Organiser. | Organiser | { "name", "description", "minAge", "maxAge", "distanceKm" } | 201 Created - the new category. 400 Bad Request - minAge is greater than maxAge. 403 Forbidden - not the owning Organiser. 404 Not Found - event does not exist. |
+| PUT | /api/categories/{id} | Updates an existing category belonging to one of the Organiser's events. | Organiser | { "name", "description", "minAge", "maxAge", "distanceKm" } | 200 OK - updated category. 403 Forbidden - not the owning Organiser. 404 Not Found - category does not exist. |
+| DELETE | /api/categories/{id} | Removes a category from an event owned by the logged in Organiser, this will fail if participants are already enrolled in the category. | Organiser | None | 204 No Content - deleted successfully. 400 Bad Request - category still has enrolments. 403 Forbidden - not the owning Organiser. 404 Not Found - category does not exist. |
+
+**Example category request body**
+```json
+{
+  "name": "10km Open",
+  "description": "Open category for the full 10km route",
+  "minAge": 16,
+  "maxAge": null,
+  "distanceKm": 10.0
+}
