@@ -41,10 +41,9 @@ CREATE TABLE Users (
     PasswordHash        VARCHAR(256) NOT NULL,
     PhoneNumber         VARCHAR(20) NULL,
     ProfilePictureUrl   VARCHAR(300) NULL,
-    CreatedAt           DATETIME NOT NULL,
+    CreatedAt           DATETIME NOT NULL CONSTRAINT DF_Users_CreatedAt DEFAULT (GETDATE()),
     CONSTRAINT PK_Users PRIMARY KEY (UserId),
     CONSTRAINT UQ_Users_Email UNIQUE (Email),
-    CONSTRAINT DF_Users_CreatedAt DEFAULT (GETDATE()) FOR CreatedAt,
     CONSTRAINT FK_Users_Roles FOREIGN KEY (RoleId) REFERENCES Roles(RoleId),
     CONSTRAINT CK_Users_Email CHECK (Email LIKE '%_@__%.__%')
 );
@@ -61,9 +60,8 @@ CREATE TABLE Events (
     DistanceKm      DECIMAL(6,2) NULL,
     EventType       VARCHAR(20) NOT NULL,
     BannerImageUrl  VARCHAR(300) NULL,
-    CreatedAt       DATETIME NOT NULL,
+    CreatedAt       DATETIME NOT NULL CONSTRAINT DF_Events_CreatedAt DEFAULT (GETDATE()),
     CONSTRAINT PK_Events PRIMARY KEY (EventId),
-    CONSTRAINT DF_Events_CreatedAt DEFAULT (GETDATE()) FOR CreatedAt,
     CONSTRAINT FK_Events_Users FOREIGN KEY (OrganiserId) REFERENCES Users(UserId),
     CONSTRAINT CK_Events_EventType CHECK (EventType IN ('Run','Walk','Cycle')),
     CONSTRAINT CK_Events_DistanceKm CHECK (DistanceKm IS NULL OR DistanceKm > 0)
@@ -91,11 +89,9 @@ CREATE TABLE Enrolments (
     ParticipantId   INT NOT NULL,
     EventId         INT NOT NULL,
     CategoryId      INT NOT NULL,
-    EnrolmentDate   DATETIME NOT NULL,
-    Status          VARCHAR(20) NOT NULL,
+    EnrolmentDate   DATETIME NOT NULL CONSTRAINT DF_Enrolments_EnrolmentDate DEFAULT (GETDATE()),
+    Status          VARCHAR(20) NOT NULL CONSTRAINT DF_Enrolments_Status DEFAULT ('Pending'),
     CONSTRAINT PK_Enrolments PRIMARY KEY (EnrolmentId),
-    CONSTRAINT DF_Enrolments_EnrolmentDate DEFAULT (GETDATE()) FOR EnrolmentDate,
-    CONSTRAINT DF_Enrolments_Status DEFAULT ('Pending') FOR Status,
     CONSTRAINT FK_Enrolments_Users FOREIGN KEY (ParticipantId) REFERENCES Users(UserId),
     CONSTRAINT FK_Enrolments_Events FOREIGN KEY (EventId) REFERENCES Events(EventId),
     CONSTRAINT FK_Enrolments_Categories FOREIGN KEY (CategoryId) REFERENCES Categories(CategoryId),
@@ -110,10 +106,9 @@ CREATE TABLE Results (
     EnrolmentId     INT NOT NULL,
     FinishTime      TIME NOT NULL,
     FinishPosition  INT NOT NULL,
-    CapturedAt      DATETIME NOT NULL,
+    CapturedAt      DATETIME NOT NULL CONSTRAINT DF_Results_CapturedAt DEFAULT (GETDATE()),
     CONSTRAINT PK_Results PRIMARY KEY (ResultId),
     CONSTRAINT UQ_Results_EnrolmentId UNIQUE (EnrolmentId),
-    CONSTRAINT DF_Results_CapturedAt DEFAULT (GETDATE()) FOR CapturedAt,
     CONSTRAINT FK_Results_Enrolments FOREIGN KEY (EnrolmentId) REFERENCES Enrolments(EnrolmentId) ON DELETE CASCADE,
     CONSTRAINT CK_Results_FinishPosition CHECK (FinishPosition > 0)
 );
@@ -186,7 +181,7 @@ GO
 -- VERIFICATION
 -- !!Run this on its own after the script finishes to confirm every
 
-SELECT 'Roles' AS TableName, COUNT(*) AS RowCount FROM Roles
+SELECT 'Roles' AS TableName, COUNT(*) AS TotalRows FROM Roles
 UNION ALL
 SELECT 'Users', COUNT(*) FROM Users
 UNION ALL
