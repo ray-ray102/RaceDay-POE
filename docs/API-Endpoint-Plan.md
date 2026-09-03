@@ -155,3 +155,70 @@ directly for reading, updating or deleting a single category once you already kn
   "maxAge": null,
   "distanceKm": 10.0
 }
+```
+## 5. Event Enrolments
+
+Enrolments link a Participant to an Event and the Category they selected. A Participant may only
+enrol once per event, which is enforced by a unique constraint on ParticipantId and EventId in
+the database. The ParticipantId is always taken from the session, never from the request body.
+
+| HTTP Method | Route | Description | Role Required | Request Body | Expected Response |
+|---|---|---|---|---|---|
+| POST | /api/enrolments | Enrols the logged in Participant in an event under a chosen category. EnrolmentDate is set by the server and Status starts as Pending. | Participant | { "eventId", "categoryId" } | 201 Created - the new enrolment object. 400 Bad Request - already enrolled in this event, category does not belong to the event, or validation failed. 404 Not Found - event or category does not exist. |
+| GET | /api/enrolments/mine | Lists all enrolments for the logged in Participant, including event name, category name and status. | Participant | None | 200 OK - array of the Participant's enrolments. |
+| GET | /api/enrolments/{id} | Returns a single enrolment by id. A Participant may only view their own enrolment. An Organiser may view enrolments for events they own. | Any (logged in) | None | 200 OK - enrolment detail. 403 Forbidden - not the owning Participant or Organiser. 404 Not Found - enrolment does not exist. |
+| GET | /api/events/{eventId}/enrolments | Lists all enrolments for a specific event owned by the logged in Organiser. | Organiser | None | 200 OK - array of enrolments for that event. 403 Forbidden - not the owning Organiser. 404 Not Found - event does not exist. |
+| PUT | /api/enrolments/{id}/status | Updates the status of an enrolment. An Organiser who owns the event may set Confirmed or Cancelled. A Participant may only set Cancelled on their own enrolment. | Any (logged in) | { "status" } | 200 OK - updated enrolment. 400 Bad Request - status is not Pending, Confirmed or Cancelled. 403 Forbidden - caller is not allowed to change this enrolment. 404 Not Found - enrolment does not exist. |
+| DELETE | /api/enrolments/{id} | Removes an enrolment. A Participant may delete their own enrolment. An Organiser may delete an enrolment for an event they own. Fails if a result has already been captured unless cascading delete is applied through the Results link. | Any (logged in) | None | 204 No Content - deleted successfully. 403 Forbidden - not allowed to delete this enrolment. 404 Not Found - enrolment does not exist. |
+
+**Example enrol request body**
+```json
+{
+  "eventId": 1,
+  "categoryId": 1
+}
+```
+
+**Example enrolment response**
+```json
+{
+  "enrolmentId": 1,
+  "participantId": 3,
+  "eventId": 1,
+  "categoryId": 1,
+  "enrolmentDate": "2026-09-03T14:00:00",
+  "status": "Pending"
+}
+```
+## 6. Results
+
+Results are one-to-one with Enrolments. Each enrolment can have at most one result, enforced by
+a UNIQUE constraint on EnrolmentId. Only the Organiser who owns the related event may create or
+update results. Participants can read their own results.
+
+| HTTP Method | Route | Description | Role Required | Request Body | Expected Response |
+|---|---|---|---|---|---|
+| POST | /api/enrolments/{enrolmentId}/results | Captures a finish time and finish position for a confirmed enrolment on an event owned by the logged in Organiser. | Organiser | { "finishTime", "finishPosition" } | 201 Created - the new result object. 400 Bad Request - enrolment already has a result, finishPosition is not greater than zero, or enrolment is not Confirmed. 403 Forbidden - not the owning Organiser. 404 Not Found - enrolment does not exist. |
+| GET | /api/enrolments/{enrolmentId}/results | Returns the result linked to a specific enrolment. | Any (logged in) | None | 200 OK - result object. 403 Forbidden - Participant does not own the enrolment and Organiser does not own the event. 404 Not Found - enrolment or result does not exist. |
+| GET | /api/events/{eventId}/results | Lists all results for an event, ordered by finish position. Public so participants can view leaderboards. | None (public) | None | 200 OK - array of results with participant and category details. 404 Not Found - event does not exist. |
+| GET | /api/results/mine | Lists all results for the logged in Participant across their enrolments. | Participant | None | 200 OK - array of the Participant's results with event details. |
+| PUT | /api/results/{id} | Updates finish time or finish position for a result on an event owned by the logged in Organiser. | Organiser | { "finishTime", "finishPosition" } | 200 OK - updated result. 400 Bad Request - finishPosition is not greater than zero. 403 Forbidden - not the owning Organiser. 404 Not Found - result does not exist. |
+| DELETE | /api/results/{id} | Deletes a result from an event owned by the logged in Organiser. | Organiser | None | 204 No Content - deleted successfully. 403 Forbidden - not the owning Organiser. 404 Not Found - result does not exist. |
+
+**Example result request body**
+```json
+{
+  "finishTime": "00:52:18",
+  "finishPosition": 47
+}
+```
+
+**Example result response**
+```json
+{
+  "resultsId": 1,
+  "enrolmentId": 1,
+  "finishTime": "00:52:18",
+  "finishPosition": 47
+}
+```

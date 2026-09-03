@@ -102,12 +102,11 @@ GO
 
 -- Results table, one result per enrolment, captured by the Organiser after the event
 CREATE TABLE Results (
-    ResultId        INT IDENTITY(1,1) NOT NULL,
+    ResultsId       INT IDENTITY(1,1) NOT NULL,
     EnrolmentId     INT NOT NULL,
     FinishTime      TIME NOT NULL,
     FinishPosition  INT NOT NULL,
-    CapturedAt      DATETIME NOT NULL CONSTRAINT DF_Results_CapturedAt DEFAULT (GETDATE()),
-    CONSTRAINT PK_Results PRIMARY KEY (ResultId),
+    CONSTRAINT PK_Results PRIMARY KEY (ResultsId),
     CONSTRAINT UQ_Results_EnrolmentId UNIQUE (EnrolmentId),
     CONSTRAINT FK_Results_Enrolments FOREIGN KEY (EnrolmentId) REFERENCES Enrolments(EnrolmentId) ON DELETE CASCADE,
     CONSTRAINT CK_Results_FinishPosition CHECK (FinishPosition > 0)
@@ -173,10 +172,10 @@ VALUES
 GO
 -- Results, sample finish times for the enrolments that have already taken place
 -- only confirmed enrolments that finished get a result, this matches the real workflow
-INSERT INTO Results (EnrolmentId, FinishTime, FinishPosition, CapturedAt)
+INSERT INTO Results (EnrolmentId, FinishTime, FinishPosition)
 VALUES
-(1, '00:52:18', 47, GETDATE()),
-(2, '00:31:05', 12, GETDATE());
+(1, '00:52:18', 47),
+(2, '00:31:05', 12);
 GO
 -- VERIFICATION
 -- !!Run this on its own after the script finishes to confirm every

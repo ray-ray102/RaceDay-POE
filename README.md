@@ -146,14 +146,15 @@ Review the `CHECK`, `UNIQUE`, `NOT NULL`, primary key and foreign key constraint
 
 ## Design Notes
 
-The following design decisions form part of the current Part 1 planning:
+The following design decisions form part of the current Part 1 planning and match `docs/ERD.png`:
 
-- User roles are represented as part of the user design so that the system can distinguish between Organisers and Participants.
-- Enrolments connect Participants with Events and their selected Categories because an enrolment needs to identify who entered, which event they entered, and which category they selected.
-- Results are associated with enrolments because a race result should belong to a Participant's entry for a specific event.
-- Constraints are included in the database design to help maintain valid and consistent data.
-- Indexes are included where they can support common queries involving relationships and frequently accessed fields.
-- Foreign keys are used to maintain referential integrity between related records.
+- The data model uses six tables: **Roles**, **Users**, **Events**, **Categories**, **Enrolments** and **Results**.
+- **Roles** is a lookup table linked one-to-many to **Users**, so each account is either an Organiser or a Participant.
+- **Events** are owned by one Organiser via `OrganiserId`, which references `Users.UserId`.
+- **Categories** belong to one Event and support optional age ranges (`MinAge`, `MaxAge`) and an optional `DistanceKm`.
+- **Enrolments** connect a Participant, an Event and a chosen Category. Status values are Pending, Confirmed or Cancelled, and a Participant may enrol only once per event.
+- **Results** are one-to-one with Enrolments (`EnrolmentId` is unique). Each result stores `FinishTime` and `FinishPosition` only.
+- Constraints, indexes and foreign keys are included so the SQL script stays consistent with the ERD relationships.
 
 These decisions are documented in greater detail through the ERD and SQL database script.
 
