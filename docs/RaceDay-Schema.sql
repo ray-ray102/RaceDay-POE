@@ -7,6 +7,11 @@ It also seeds the database with sample data so the schema can be tested right aw
 Run this on a clean SQL Server instance using SSMS, the whole script can be run in one go
 */
 
+-- Switch to master first, you cannot drop a database while your own
+-- session is connected to it, even in single-user mode
+USE master;
+GO
+
 IF DB_ID('RaceDayDB') IS NOT NULL
 BEGIN
     ALTER DATABASE RaceDayDB SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
@@ -18,6 +23,16 @@ CREATE DATABASE RaceDayDB;
 GO
 
 USE RaceDayDB;
+GO
+
+SET ANSI_NULLS ON;
+GO
+SET QUOTED_IDENTIFIER ON;
+GO
+SET NOCOUNT ON;
+GO
+
+PRINT 'Database created, building tables...';
 GO
 
 -- TABLES
@@ -33,15 +48,15 @@ GO
 
 -- Users table, stores both Organisers and Participants, role is set at registration
 CREATE TABLE Users (
-    UserId              INT IDENTITY(1,1) NOT NULL,
-    RoleId              INT NOT NULL,
-    FirstName           VARCHAR(100) NOT NULL,
-    LastName            VARCHAR(100) NOT NULL,
-    Email               VARCHAR(150) NOT NULL,
-    PasswordHash        VARCHAR(256) NOT NULL,
-    PhoneNumber         VARCHAR(20) NULL,
-    ProfilePictureUrl   VARCHAR(300) NULL,
-    CreatedAt           DATETIME NOT NULL CONSTRAINT DF_Users_CreatedAt DEFAULT (GETDATE()),
+    UserId INT IDENTITY(1,1) NOT NULL,
+    RoleId INT NOT NULL,
+    FirstName VARCHAR(100) NOT NULL,
+    LastName VARCHAR(100) NOT NULL,
+    Email VARCHAR(150) NOT NULL,
+    PasswordHash VARCHAR(256) NOT NULL,
+    PhoneNumber  VARCHAR(20) NULL,
+    ProfilePictureUrl VARCHAR(300) NULL,
+    CreatedAt DATETIME NOT NULL CONSTRAINT DF_Users_CreatedAt DEFAULT (GETDATE()),
     CONSTRAINT PK_Users PRIMARY KEY (UserId),
     CONSTRAINT UQ_Users_Email UNIQUE (Email),
     CONSTRAINT FK_Users_Roles FOREIGN KEY (RoleId) REFERENCES Roles(RoleId),
@@ -51,16 +66,16 @@ GO
 
 -- Events table, each event is owned by one Organiser
 CREATE TABLE Events (
-    EventId         INT IDENTITY(1,1) NOT NULL,
-    OrganiserId     INT NOT NULL,
-    Name            VARCHAR(150) NOT NULL,
-    Description     VARCHAR(1000) NULL,
-    EventDate       DATETIME NOT NULL,
-    Location        VARCHAR(200) NOT NULL,
-    DistanceKm      DECIMAL(6,2) NULL,
-    EventType       VARCHAR(20) NOT NULL,
-    BannerImageUrl  VARCHAR(300) NULL,
-    CreatedAt       DATETIME NOT NULL CONSTRAINT DF_Events_CreatedAt DEFAULT (GETDATE()),
+    EventId INT IDENTITY(1,1) NOT NULL,
+    OrganiserId INT NOT NULL,
+    Name VARCHAR(150) NOT NULL,
+    Description VARCHAR(1000) NULL,
+    EventDate DATETIME NOT NULL,
+    Location VARCHAR(200) NOT NULL,
+    DistanceKm DECIMAL(6,2) NULL,
+    EventType VARCHAR(20) NOT NULL,
+    BannerImageUrl VARCHAR(300) NULL,
+    CreatedAt DATETIME NOT NULL CONSTRAINT DF_Events_CreatedAt DEFAULT (GETDATE()),
     CONSTRAINT PK_Events PRIMARY KEY (EventId),
     CONSTRAINT FK_Events_Users FOREIGN KEY (OrganiserId) REFERENCES Users(UserId),
     CONSTRAINT CK_Events_EventType CHECK (EventType IN ('Run','Walk','Cycle')),
@@ -70,19 +85,20 @@ GO
 
 -- Categories table, age or distance categories that belong to a single event
 CREATE TABLE Categories (
-    CategoryId      INT IDENTITY(1,1) NOT NULL,
-    EventId         INT NOT NULL,
-    Name            VARCHAR(100) NOT NULL,
-    Description     VARCHAR(300) NULL,
-    MinAge          INT NULL,
-    MaxAge          INT NULL,
-    DistanceKm      DECIMAL(6,2) NULL,
+    CategoryId INT IDENTITY(1,1) NOT NULL,
+    EventId INT NOT NULL,
+    Name VARCHAR(100) NOT NULL,
+    Description VARCHAR(300) NULL,
+    MinAge INT NULL,
+    MaxAge INT NULL,
+    DistanceKm DECIMAL(6,2) NULL,
     CONSTRAINT PK_Categories PRIMARY KEY (CategoryId),
     CONSTRAINT FK_Categories_Events FOREIGN KEY (EventId) REFERENCES Events(EventId) ON DELETE CASCADE,
     CONSTRAINT CK_Categories_AgeRange CHECK (MinAge IS NULL OR MaxAge IS NULL OR MinAge <= MaxAge),
     CONSTRAINT CK_Categories_DistanceKm CHECK (DistanceKm IS NULL OR DistanceKm > 0)
 );
 GO
+
 -- Enrolments table, links a Participant to an event and the category they chose
 CREATE TABLE Enrolments (
     EnrolmentId     INT IDENTITY(1,1) NOT NULL,
@@ -113,17 +129,27 @@ CREATE TABLE Results (
 );
 GO
 
+PRINT 'Tables created, adding indexes...';
+GO
+
 -- INDEXES
 -- Speeds up the lookups the API will run most often, such as fetching
--- all events for an organiser or all enrolments for a participant
+-- all events for an organiser, all enrolments for a participant, or
+-- upcoming events sorted by date
 
 CREATE INDEX IX_Users_RoleId ON Users(RoleId);
 CREATE INDEX IX_Events_OrganiserId ON Events(OrganiserId);
+CREATE INDEX IX_Events_EventDate ON Events(EventDate);
 CREATE INDEX IX_Categories_EventId ON Categories(EventId);
 CREATE INDEX IX_Enrolments_EventId ON Enrolments(EventId);
 CREATE INDEX IX_Enrolments_ParticipantId ON Enrolments(ParticipantId);
 CREATE INDEX IX_Enrolments_CategoryId ON Enrolments(CategoryId);
+CREATE INDEX IX_Enrolments_Status ON Enrolments(Status);
 GO
+
+PRINT 'Indexes created, seeding sample data...';
+GO
+
 -- SEED DATA
 -- Covers every table, 2 Organisers, 2 Participants, 3 Events,
 -- categories for each event, sample enrolments and sample results
@@ -151,6 +177,7 @@ VALUES
 (1, 'Cape Winelands Cycle Challenge', 'A scenic cycling event through the vineyards outside Stellenbosch', '2026-11-15 06:30:00', 'Stellenbosch, Western Cape', 60.0, 'Cycle', NULL, GETDATE()),
 (2, 'Durban Beachfront Park Walk', 'A family friendly walk along the Durban beachfront in support of local charities', '2026-09-20 07:00:00', 'North Beach, Durban', 5.0, 'Walk', NULL, GETDATE());
 GO
+
 -- Categories, at least two per event, six in total
 INSERT INTO Categories (EventId, Name, Description, MinAge, MaxAge, DistanceKm)
 VALUES
@@ -170,6 +197,7 @@ VALUES
 (3, 2, 3, GETDATE(), 'Pending'),
 (4, 3, 5, GETDATE(), 'Confirmed');
 GO
+
 -- Results, sample finish times for the enrolments that have already taken place
 -- only confirmed enrolments that finished get a result, this matches the real workflow
 INSERT INTO Results (EnrolmentId, FinishTime, FinishPosition)
@@ -177,8 +205,12 @@ VALUES
 (1, '00:52:18', 47),
 (2, '00:31:05', 12);
 GO
+
+PRINT 'Seed data inserted, schema build complete.';
+GO
+
 -- VERIFICATION
--- !!Run this on its own after the script finishes to confirm every
+-- !!Run this on its own after the script finishes to confirm every table has rows
 
 SELECT 'Roles' AS TableName, COUNT(*) AS TotalRows FROM Roles
 UNION ALL
