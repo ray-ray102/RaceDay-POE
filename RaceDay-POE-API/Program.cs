@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RaceDay_POE_API.Data;
+using RaceDay_POE_API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,9 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
     options.IdleTimeout = TimeSpan.FromMinutes(30);
 });
+
+// Password hashing service
+builder.Services.AddScoped<IPasswordService, PasswordService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
