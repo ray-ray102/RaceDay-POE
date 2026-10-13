@@ -1,4 +1,4 @@
-namespace RaceDay.API;
+namespace RaceDay_POE_API;
 
 public class WeatherForecast
 {
