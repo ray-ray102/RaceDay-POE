@@ -1,6 +1,12 @@
 @RaceDay_POE_API_HostAddress = http://localhost:5141
 
-GET {{RaceDay_POE_API_HostAddress}}/weatherforecast/
+POST {{RaceDay_POE_API_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "sipho.dlamini@gmail.com",
+  "password": "MySecurePassword123"
+}
 Accept: application/json
 
 ###
