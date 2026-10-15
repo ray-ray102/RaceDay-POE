@@ -1,6 +1,7 @@
 # RaceDay - Event Management Platform
 
 ![Part 1 Validation](https://github.com/ray-ray102/RaceDay-POE/actions/workflows/part1-validation.yml/badge.svg)
+![Part 2 CI](https://github.com/ray-ray102/RaceDay-POE/actions/workflows/ci.yml/badge.svg)
 
 RaceDay is a full-stack web based event management system designed for the South African road running, walking and cycling community. Many local events can still rely on paper registration and spreadsheets, so RaceDay is planned to bring these processes online. Event Organisers will be able to create and manage events, categories and participant results, while Participants will be able to browse upcoming events, enter events, and track their personal performance history.
 
@@ -23,6 +24,7 @@ This repository contains the Portfolio of Evidence (POE) for the RaceDay project
 - [Design Notes](#design-notes)
 - [GitHub and Commit History](#github-and-commit-history)
 - [CI/CD](#cicd)
+- [Part 2 - RaceDay API](#part-2---raceday-api)
 - [Author](#author)
 
 ## User Roles
@@ -205,6 +207,79 @@ The screenshot below provides evidence of a successful Part 1 workflow run:
 
 The CI workflow in Part 1 focuses on repository and documentation validation. Project building and automated unit testing are planned for Part 2 when the ASP.NET Core API and its test project are introduced.
 
+## Part 2 - RaceDay API
+
+Part 2 adds a RESTful ASP.NET Core Web API (.NET 8) that follows `docs/API-Endpoint-Plan.md` and the Part 1 ERD. The database is created code-first with Entity Framework Core and SQL Server LocalDB.
+
+### Project Structure
+
+```text
+RaceDay-POE-API.sln
+RaceDay-POE-API/            # Web API project
+  Controllers/              # Auth, Users, Events, Categories, Enrolments, Results
+  Data/                     # RaceDayDbContext
+  DTOs/                     # Request and response models
+  Filters/                  # SessionAuthorize role filter
+  Helpers/                  # Session keys and role names
+  Migrations/               # EF Core migrations
+  Models/                   # Entity classes
+  Services/                 # Password hashing service
+RaceDay-POE-API.Tests/      # xUnit unit tests
+```
+
+### Running the API
+
+1. Install the .NET 8 SDK and SQL Server LocalDB (included with Visual Studio).
+2. Install the EF Core tools if needed: `dotnet tool install --global dotnet-ef`
+3. Create the database from the migrations:
+
+   ```bash
+   cd RaceDay-POE-API
+   dotnet ef database update
+   ```
+
+4. Run the API with `dotnet run` (or press F5 in Visual Studio) and open `/swagger` to test the endpoints.
+
+The connection string `RaceDayConnection` in `appsettings.json` points to the `RaceDayPOEDB` database on `(localdb)\MSSQLLocalDB`.
+
+### Authentication and Roles
+
+The API uses session based authentication. After a successful login, the user's id and role are stored in the session cookie. Endpoints are protected by a custom `SessionAuthorize` filter that returns `401 Unauthorized` when no one is logged in and `403 Forbidden` when the role is not allowed. Passwords are hashed with the ASP.NET Core `PasswordHasher`.
+
+### Endpoint Summary
+
+| Area | Endpoints | Role |
+|---|---|---|
+| Auth | `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/logout` | Public |
+| Users | `GET /api/users/me`, `PUT /api/users/me` | Logged in |
+| Events | `GET /api/events`, `GET /api/events/{id}` | Public |
+| Events | `POST /api/events`, `PUT /api/events/{id}`, `DELETE /api/events/{id}`, `GET /api/events/mine` | Organiser |
+| Categories | `GET /api/events/{eventId}/categories`, `GET /api/categories/{id}` | Public |
+| Categories | `POST /api/events/{eventId}/categories`, `PUT /api/categories/{id}`, `DELETE /api/categories/{id}` | Organiser |
+| Enrolments | `POST /api/enrolments`, `GET /api/enrolments/mine`, `DELETE /api/enrolments/{id}` | Participant |
+| Enrolments | `GET /api/events/{eventId}/enrolments`, `PUT /api/enrolments/{id}/status` | Organiser |
+| Results | `POST /api/enrolments/{enrolmentId}/results`, `PUT /api/results/{id}`, `DELETE /api/results/{id}`, `GET /api/events/{eventId}/results` | Organiser |
+| Results | `GET /api/results/mine` | Participant |
+
+The full routes, request bodies and responses are listed in `docs/API-Endpoint-Plan.md` and in Swagger.
+
+### Unit Tests
+
+The `RaceDay-POE-API.Tests` project uses xUnit with the EF Core InMemory provider. It covers registration and login, role authorization, event management and enrolments. Run the tests with:
+
+```bash
+dotnet test RaceDay-POE-API.sln
+```
+
+### Part 2 CI
+
+The workflow `.github/workflows/ci.yml` restores, builds and tests the solution on every push to `main`, `part-2*`, `part-3*` and `final*` branches, and on pull requests to `main`. Any new projects added to the solution in the final POE are picked up automatically.
+
+<!-- Add a screenshot of a successful Part 2 CI run here -->
+
+### Video Demonstration
+
+YouTube link: *to be added*
 ## Author
 
 **Raesibe Betty Lelaka**
