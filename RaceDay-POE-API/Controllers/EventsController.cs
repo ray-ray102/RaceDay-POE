@@ -9,6 +9,7 @@ using RaceDay_POE_API.Models;
 namespace RaceDay_POE_API.Controllers
 {
     // Browse events publicly, Organisers can manage the events they own
+    [Produces("application/json")]
     [Route("api/events")]
     public class EventsController : BaseApiController
     {

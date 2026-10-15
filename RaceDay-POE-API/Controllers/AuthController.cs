@@ -10,6 +10,7 @@ namespace RaceDay_POE_API.Controllers
 {
     // Handles registering, logging in and logging out
     [ApiController]
+    [Produces("application/json")]
     [Route("api/auth")]
     public class AuthController : ControllerBase
     {

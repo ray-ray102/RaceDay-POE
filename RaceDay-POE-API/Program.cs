@@ -29,7 +29,15 @@ builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "RaceDay API",
+        Version = "v1",
+        Description = "RESTful API for the RaceDay event platform. Log in through api/auth/login first, the session cookie is then sent with every request. Organiser and Participant roles are checked on each protected endpoint."
+    });
+});
 
 var app = builder.Build();
 
@@ -37,7 +45,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "RaceDay API v1");
+        options.DocumentTitle = "RaceDay API";
+    });
 }
 
 app.UseHttpsRedirection();

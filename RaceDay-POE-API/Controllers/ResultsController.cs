@@ -9,6 +9,7 @@ using RaceDay_POE_API.Models;
 namespace RaceDay_POE_API.Controllers
 {
     // Organisers capture results for their events, anyone can view an event leaderboard
+    [Produces("application/json")]
     public class ResultsController : BaseApiController
     {
         private readonly RaceDayDbContext _context;

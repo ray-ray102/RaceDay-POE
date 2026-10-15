@@ -13,6 +13,7 @@ namespace RaceDay_POE_API.Controllers
      Listing and adding go through api/events/{eventId}/categories,
      reading, updating and deleting one category use api/categories/{id}.
     */
+    [Produces("application/json")]
     public class CategoriesController : BaseApiController
     {
         private readonly RaceDayDbContext _context;

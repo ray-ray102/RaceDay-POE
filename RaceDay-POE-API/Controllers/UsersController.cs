@@ -8,6 +8,7 @@ using RaceDay_POE_API.Models;
 namespace RaceDay_POE_API.Controllers
 {
     // Profile endpoints for the logged in user, both roles use the same routes
+    [Produces("application/json")]
     [Route("api/users")]
     [SessionAuthorize]
     public class UsersController : BaseApiController

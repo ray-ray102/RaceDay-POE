@@ -9,6 +9,7 @@ using RaceDay_POE_API.Models;
 namespace RaceDay_POE_API.Controllers
 {
     // Participants enter events, Organisers manage the enrolments on their own events
+    [Produces("application/json")]
     public class EnrolmentsController : BaseApiController
     {
         private readonly RaceDayDbContext _context;
