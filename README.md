@@ -275,7 +275,11 @@ dotnet test RaceDay-POE-API.sln
 
 The workflow `.github/workflows/ci.yml` restores, builds and tests the solution on every push to `main`, `part-2*`, `part-3*` and `final*` branches, and on pull requests to `main`. Any new projects added to the solution in the final POE are picked up automatically.
 
-<!-- Add a screenshot of a successful Part 2 CI run here -->
+### Successful Part 2 CI Build
+
+The screenshot below shows a successful run of the Part 2 CI workflow, which restores, builds and tests the solution:
+
+<img src="docs/part2-ci-run.png" alt="Successful Part 2 CI workflow run" width="700" />
 
 ### Video Demonstration
 
