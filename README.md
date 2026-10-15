@@ -281,9 +281,6 @@ The screenshot below shows a successful run of the Part 2 CI workflow, which res
 
 <img src="docs/part2-ci-run.png" alt="Successful Part 2 CI workflow run" width="700" />
 
-### Video Demonstration
-
-YouTube link: *to be added*
 ## Author
 
 **Raesibe Betty Lelaka**
