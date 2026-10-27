@@ -20,3 +20,13 @@ html {
 body {
   margin-bottom: 60px;
 }
+/* ---------- RaceDay branding ---------- */
+:root {
+  --raceday-primary: #ff5a1f;   /* energetic orange */
+  --raceday-dark: #1b1f3b;      /* deep navy */
+  --raceday-accent: #00c2a8;    /* track teal */
+}
+.raceday-navbar { background: linear-gradient(90deg, var(--raceday-dark), #2d3270); }
+.raceday-navbar .navbar-brand { font-weight: 800; letter-spacing: .5px; color: var(--raceday-primary) !important; }
+.btn-raceday { background-color: var(--raceday-primary); border-color: var(--raceday-primary); color: #fff; }
+.btn-raceday:hover { background-color: #e04812; color: #fff; }
