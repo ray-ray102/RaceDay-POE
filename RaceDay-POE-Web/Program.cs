@@ -1,7 +1,20 @@
+using Microsoft.Extensions.Options;
+using RaceDay_POE_Web.Configuration;
+using RaceDay_POE_Web.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// RaceDay Web API (Part 2) - the only data source for this MVC app
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection(ApiSettings.SectionName));
+builder.Services.AddHttpClient<RaceDayApiClient>((sp, client) =>
+{
+    var settings = sp.GetRequiredService<IOptions<ApiSettings>>().Value;
+    client.BaseAddress = new Uri(settings.BaseUrl);
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
 
 var app = builder.Build();
 
