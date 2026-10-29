@@ -14,7 +14,9 @@ builder.Services.AddHttpClient<RaceDayApiClient>((sp, client) =>
     var settings = sp.GetRequiredService<IOptions<ApiSettings>>().Value;
     client.BaseAddress = new Uri(settings.BaseUrl);
     client.Timeout = TimeSpan.FromSeconds(30);
-});
+})
+// Cookies are forwarded per user by RaceDayApiClient, never shared through the pooled handler
+.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { UseCookies = false });
 
 // Session stores the logged-in user's id/role returned by the API
 builder.Services.AddDistributedMemoryCache();
