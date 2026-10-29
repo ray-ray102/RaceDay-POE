@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using RaceDay_POE_Web.Helpers
+@{
+    var signedInName = Context.Session.GetString(SessionKeys.FirstName);
+    var signedInRole = Context.Session.GetString(SessionKeys.Role);
+    var isSignedIn = Context.Session.GetInt32(SessionKeys.UserId) != null;
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -27,6 +33,31 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        @if (isSignedIn)
+                        {
+                            <li class="nav-item">
+                                <span class="navbar-text me-3">
+                                    <i class="bi bi-person-circle"></i> @signedInName
+                                    <span class="badge bg-warning text-dark ms-1">@signedInRole</span>
+                                </span>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-light btn-sm mt-1">Logout</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-warning btn-sm mt-1 ms-sm-2" asp-controller="Account" asp-action="Register">Register</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
