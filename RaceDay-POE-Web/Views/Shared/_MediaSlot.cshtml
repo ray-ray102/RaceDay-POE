@@ -1,0 +1,12 @@
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Env
+@model (string Path, string Icon, string CssClass)
+@{
+    // Path is relative to wwwroot, e.g. "images/home/run.jpg". Falls back to a gradient + icon if the file is missing.
+    var exists = System.IO.File.Exists(System.IO.Path.Combine(Env.WebRootPath ?? "", Model.Path.Replace('/', System.IO.Path.DirectorySeparatorChar)));
+}
+<div class="hero-media @Model.CssClass" @if (exists) { <text>style="background-image:url('@Url.Content("~/" + Model.Path)')"</text> }>
+    @if (!exists)
+    {
+        <div class="hero-media-fallback"><i class="bi @Model.Icon"></i></div>
+    }
+</div>

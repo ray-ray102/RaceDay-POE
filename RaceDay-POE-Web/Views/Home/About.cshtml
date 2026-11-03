@@ -1,7 +1,5 @@
-@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Env
 @{
     ViewData["Title"] = "About";
-    var hasImage = System.IO.File.Exists(System.IO.Path.Combine(Env.WebRootPath ?? "", "images", "hero", "about.jpg"));
 }
 <section class="page-hero">
     <div class="row align-items-center g-4">
@@ -11,12 +9,7 @@
             <p class="lead">RaceDay brings organisers and participants together in one place to plan, publish, enter and track runs, walks and cycles.</p>
         </div>
         <div class="col-lg-6">
-            <div class="hero-media" @(hasImage ? Html.Raw($"style=\"background-image:url('{Url.Content("~/images/hero/about.jpg")}')\"") : Html.Raw(""))>
-                @if (!hasImage)
-                {
-                    <div class="hero-media-fallback"><i class="bi bi-bicycle"></i><i class="bi bi-person-walking"></i><i class="bi bi-trophy-fill"></i></div>
-                }
-            </div>
+            <partial name="_MediaSlot" model='("images/hero/about.jpg", "bi-bicycle", "hero-media-lg")' />
         </div>
     </div>
 </section>

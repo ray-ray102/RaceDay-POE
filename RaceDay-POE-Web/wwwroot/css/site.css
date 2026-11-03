@@ -196,3 +196,20 @@ a:hover { color: var(--raceday-primary); }
 .feature-card h3 { font-size: 1.05rem; font-weight: 700; margin: .9rem 0 .4rem; }
 .feature-card p { color: var(--rd-muted); font-size: .92rem; margin: 0; }
 .feature-icon { display: inline-flex; width: 42px; height: 42px; align-items: center; justify-content: center; border-radius: 12px; background: var(--raceday-primary-soft); color: var(--raceday-primary); font-size: 1.2rem; }
+
+/* ---------- Home sections ---------- */
+.hero-media-lg { min-height: 380px; }
+.media-sm { min-height: 180px; border-radius: 0; box-shadow: none; }
+.media-sm .hero-media-fallback { font-size: 2.25rem; }
+.event-type-card { height: 100%; background: #fff; border: 1px solid var(--rd-border); border-radius: 16px; overflow: hidden; transition: transform .15s ease, box-shadow .15s ease; }
+.event-type-card:hover { transform: translateY(-2px); box-shadow: var(--rd-shadow); }
+.event-type-card h3, .step-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: .3rem; }
+.event-type-card p, .step-card p { color: var(--rd-muted); font-size: .92rem; margin: 0; }
+.stats-strip { background: #fff; border: 1px solid var(--rd-border); border-radius: 16px; padding: 1.5rem 1rem; }
+.stat-value { font-size: 1.8rem; font-weight: 800; color: var(--raceday-primary); letter-spacing: -.03em; }
+.stat-label { color: var(--rd-muted); font-size: .85rem; }
+.step-card { height: 100%; padding: 1.5rem; background: #fff; border: 1px solid var(--rd-border); border-radius: 16px; }
+.step-num { display: inline-flex; width: 36px; height: 36px; align-items: center; justify-content: center; border-radius: 50%; background: var(--raceday-dark); color: #fff; font-weight: 700; margin-bottom: .75rem; }
+.cta-band { padding: 2rem; border-radius: 20px; color: #fff; background: radial-gradient(circle at 90% 10%, rgba(255,90,31,.5), transparent 50%), linear-gradient(135deg, var(--raceday-dark), var(--raceday-dark-2)); }
+.cta-band h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: .25rem; }
+.cta-band p { color: rgba(255,255,255,.75); }
