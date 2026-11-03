@@ -165,7 +165,9 @@ a:hover { color: var(--raceday-primary); }
 .footer { border-top: 1px solid var(--rd-border); background: #fff; color: var(--rd-muted); font-size: .85rem; padding: 1.25rem 0; margin-top: 3rem; }
 
 /* ---------- Navbar layout: brand left, links centred, actions right ---------- */
-.brand-logo { height: 32px; width: auto; margin-right: .5rem; border-radius: 8px; }
+.brand-logo { height: 38px; width: auto; display: block; }
+.photo-credits { opacity: .75; font-size: .8rem; }
+.photo-credits a { text-decoration: underline; }
 @media (min-width: 992px) {
   #mainNav .nav-center { position: absolute; left: 50%; transform: translateX(-50%); }
   #mainNav .nav-actions { margin-left: auto; }
