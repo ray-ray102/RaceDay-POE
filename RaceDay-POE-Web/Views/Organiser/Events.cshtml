@@ -1,0 +1,79 @@
+@model List<RaceDay_POE_Web.Models.Api.OrganiserEventDto>
+@{
+    ViewData["Title"] = "My Events";
+    string TypeBadge(string type) => type switch
+    {
+        "Run" => "rd-badge-orange",
+        "Cycle" => "rd-badge-teal",
+        _ => "rd-badge-navy"
+    };
+}
+<div class="page-header">
+    <div>
+        <div class="eyebrow">Organiser</div>
+        <h1>My Events</h1>
+        <p>All the races you have published, with their entry counts.</p>
+    </div>
+    <a class="btn btn-raceday" asp-action="Create"><i class="bi bi-plus-lg me-1"></i> New event</a>
+</div>
+
+@if (ViewData["ApiError"] is string apiError)
+{
+    <div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i> @apiError</div>
+}
+
+<div class="card rd-card overflow-hidden">
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon"><i class="bi bi-calendar-x"></i></div>
+            <h5>No events yet</h5>
+            <p>Create your first race event and it will show up here for participants to enter.</p>
+            <a class="btn btn-raceday" asp-action="Create"><i class="bi bi-plus-lg me-1"></i> Create event</a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table rd-table">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th class="text-end">Entries</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ev in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="fw-semibold">@ev.Name</div>
+                                <div class="small text-muted"><i class="bi bi-geo-alt"></i> @ev.Location</div>
+                            </td>
+                            <td class="text-nowrap">@ev.EventDate.ToString("dd MMM yyyy, HH:mm")</td>
+                            <td><span class="rd-badge @TypeBadge(ev.EventType)">@ev.EventType</span></td>
+                            <td>
+                                @if (ev.IsUpcoming)
+                                {
+                                    <span class="rd-badge rd-badge-green"><i class="bi bi-circle-fill" style="font-size:.45rem"></i> Upcoming</span>
+                                }
+                                else
+                                {
+                                    <span class="rd-badge rd-badge-gray">Completed</span>
+                                }
+                            </td>
+                            <td class="text-end fw-semibold">@ev.EnrolmentCount</td>
+                            <td class="text-end">
+                                <a class="btn btn-ghost btn-sm" asp-action="Edit" asp-route-id="@ev.EventId"><i class="bi bi-pencil"></i> Edit</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
