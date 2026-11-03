@@ -163,3 +163,36 @@ a:hover { color: var(--raceday-primary); }
 /* ---------- Alerts & footer ---------- */
 .alert { border-radius: var(--rd-radius-sm); border-width: 1px; font-size: .92rem; }
 .footer { border-top: 1px solid var(--rd-border); background: #fff; color: var(--rd-muted); font-size: .85rem; padding: 1.25rem 0; margin-top: 3rem; }
+
+/* ---------- Navbar layout: brand left, links centred, actions right ---------- */
+.brand-logo { height: 32px; width: auto; margin-right: .5rem; border-radius: 8px; }
+@media (min-width: 992px) {
+  #mainNav .nav-center { position: absolute; left: 50%; transform: translateX(-50%); }
+  #mainNav .nav-actions { margin-left: auto; }
+}
+@media (max-width: 991.98px) {
+  #mainNav { padding: .75rem 0; }
+  #mainNav .nav-actions { border-top: 1px solid rgba(255,255,255,.12); margin-top: .5rem; padding-top: .75rem; gap: .5rem; }
+  #mainNav .nav-actions .btn { width: 100%; }
+}
+
+/* ---------- Page heroes, media slots & feature cards ---------- */
+.text-orange { color: var(--raceday-primary) !important; }
+.page-hero { padding: 3.5rem 0 2rem; }
+.page-hero h1 { font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 800; letter-spacing: -.03em; }
+.page-hero h1 .accent { color: var(--raceday-primary); }
+.page-hero .lead { color: var(--rd-muted); margin: 1rem 0 0; }
+.hero-media {
+  position: relative; min-height: 320px; border-radius: 20px; overflow: hidden;
+  background: radial-gradient(circle at 20% 20%, rgba(255,90,31,.55), transparent 55%),
+              radial-gradient(circle at 85% 80%, rgba(0,194,168,.45), transparent 50%),
+              linear-gradient(135deg, var(--raceday-dark), var(--raceday-dark-2));
+  background-size: cover; background-position: center; box-shadow: 0 20px 45px -20px rgba(27,31,59,.45);
+}
+.hero-media-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 1.5rem; font-size: 2.75rem; color: rgba(255,255,255,.85); }
+.section-title { font-size: 1.4rem; font-weight: 700; letter-spacing: -.02em; margin-bottom: 1rem; }
+.feature-card { height: 100%; padding: 1.5rem; background: #fff; border: 1px solid var(--rd-border); border-radius: 16px; transition: transform .15s ease, box-shadow .15s ease; }
+.feature-card:hover { transform: translateY(-2px); box-shadow: var(--rd-shadow); }
+.feature-card h3 { font-size: 1.05rem; font-weight: 700; margin: .9rem 0 .4rem; }
+.feature-card p { color: var(--rd-muted); font-size: .92rem; margin: 0; }
+.feature-icon { display: inline-flex; width: 42px; height: 42px; align-items: center; justify-content: center; border-radius: 12px; background: var(--raceday-primary-soft); color: var(--raceday-primary); font-size: 1.2rem; }

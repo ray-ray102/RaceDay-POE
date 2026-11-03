@@ -1,0 +1,38 @@
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Env
+@{
+    ViewData["Title"] = "About";
+    var hasImage = System.IO.File.Exists(System.IO.Path.Combine(Env.WebRootPath ?? "", "images", "hero", "about.jpg"));
+}
+<section class="page-hero">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-6">
+            <span class="hero-pill"><i class="bi bi-info-circle-fill text-orange"></i> About RaceDay</span>
+            <h1>Built for the people who make <span class="accent">race day</span> happen.</h1>
+            <p class="lead">RaceDay brings organisers and participants together in one place to plan, publish, enter and track runs, walks and cycles.</p>
+        </div>
+        <div class="col-lg-6">
+            <div class="hero-media" @(hasImage ? Html.Raw($"style=\"background-image:url('{Url.Content("~/images/hero/about.jpg")}')\"") : Html.Raw(""))>
+                @if (!hasImage)
+                {
+                    <div class="hero-media-fallback"><i class="bi bi-bicycle"></i><i class="bi bi-person-walking"></i><i class="bi bi-trophy-fill"></i></div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-4">
+    <h2 class="section-title">What you can do</h2>
+    <div class="row g-3">
+        <div class="col-md-4"><div class="feature-card"><span class="feature-icon"><i class="bi bi-calendar-plus"></i></span><h3>Publish events</h3><p>Organisers create and edit runs, walks and cycles with dates, venues, distances and entry limits.</p></div></div>
+        <div class="col-md-4"><div class="feature-card"><span class="feature-icon"><i class="bi bi-search"></i></span><h3>Find your next race</h3><p>Participants browse upcoming events and pick the ones that match their goals.</p></div></div>
+        <div class="col-md-4"><div class="feature-card"><span class="feature-icon"><i class="bi bi-card-checklist"></i></span><h3>Enter &amp; track</h3><p>Register in a few clicks and keep every entry in one tidy list.</p></div></div>
+    </div>
+</section>
+
+<section class="py-4">
+    <div class="row g-3">
+        <div class="col-md-6"><div class="rd-card p-4 h-100"><h3 class="h5"><i class="bi bi-megaphone text-orange me-1"></i> For organisers</h3><p class="text-muted mb-0">A clean dashboard with your events, upcoming dates and entry counts, so you always know where things stand.</p></div></div>
+        <div class="col-md-6"><div class="rd-card p-4 h-100"><h3 class="h5"><i class="bi bi-person-check text-orange me-1"></i> For participants</h3><p class="text-muted mb-0">One account for every event you enter, with your registrations always a tap away.</p></div></div>
+    </div>
+</section>

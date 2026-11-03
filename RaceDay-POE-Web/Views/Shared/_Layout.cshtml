@@ -3,6 +3,8 @@
     var signedInName = Context.Session.GetString(SessionKeys.FirstName);
     var signedInRole = Context.Session.GetString(SessionKeys.Role);
     var isSignedIn = Context.Session.GetInt32(SessionKeys.UserId) != null;
+    var webEnv = Context.RequestServices.GetService(typeof(Microsoft.AspNetCore.Hosting.IWebHostEnvironment)) as Microsoft.AspNetCore.Hosting.IWebHostEnvironment;
+    var hasLogo = webEnv != null && System.IO.File.Exists(System.IO.Path.Combine(webEnv.WebRootPath ?? "", "images", "logo.png"));
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -19,13 +21,23 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark raceday-navbar sticky-top">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span class="brand-mark"><i class="bi bi-lightning-charge-fill"></i></span>RaceDay</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                <a class="navbar-brand me-lg-4" asp-area="" asp-controller="Home" asp-action="Index">
+                    @if (hasLogo)
+                    {
+                        <img src="~/images/logo.png" alt="RaceDay logo" class="brand-logo" asp-append-version="true" />
+                    }
+                    else
+                    {
+                        <span class="brand-mark"><i class="bi bi-lightning-charge-fill"></i></span>
+                    }
+                    RaceDay
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="navbar-collapse collapse" id="mainNav">
+                    <ul class="navbar-nav mx-lg-auto nav-center">
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
@@ -42,15 +54,14 @@
                             <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="Dashboard" title="Coming soon"><i class="bi bi-search"></i> Browse Events</a></li>
                             <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="Dashboard" title="Coming soon"><i class="bi bi-card-checklist"></i> My Registrations</a></li>
                         }
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                     </ul>
-                    <ul class="navbar-nav">
+                    <ul class="navbar-nav nav-actions align-items-lg-center">
                         @if (isSignedIn)
                         {
                             <li class="nav-item">
-                                <span class="user-chip me-3">
+                                <span class="user-chip me-lg-3">
                                     <span class="avatar">@(string.IsNullOrEmpty(signedInName) ? "?" : signedInName.Substring(0, 1).ToUpper())</span>
                                     @signedInName
                                     <span class="rd-badge rd-badge-orange">@signedInRole</span>
@@ -92,7 +103,11 @@
     <footer class="footer">
         <div class="container d-flex flex-wrap justify-content-between gap-2">
             <span>&copy; 2026 RaceDay &middot; Find, enter and track race events</span>
-            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <span class="d-flex gap-3">
+                <a asp-area="" asp-controller="Home" asp-action="About">About</a>
+                <a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a>
+                <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </span>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
