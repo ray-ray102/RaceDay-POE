@@ -186,12 +186,14 @@ a:hover { color: var(--raceday-primary); }
 .page-hero .lead { color: var(--rd-muted); margin: 1rem 0 0; }
 .hero-media {
   position: relative; min-height: 320px; border-radius: 20px; overflow: hidden;
-  background: radial-gradient(circle at 20% 20%, rgba(255,90,31,.55), transparent 55%),
-              radial-gradient(circle at 85% 80%, rgba(0,194,168,.45), transparent 50%),
-              linear-gradient(135deg, var(--raceday-dark), var(--raceday-dark-2));
+  background-color: rgba(244,246,250,.85);
   background-size: cover; background-position: center; box-shadow: 0 20px 45px -20px rgba(27,31,59,.45);
 }
-.hero-media-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 1.5rem; font-size: 2.75rem; color: rgba(255,255,255,.85); }
+.hero-media-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: var(--raceday-dark);
+  background: rgba(255,255,255,.55); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(255,255,255,.7); border-radius: inherit; }
+.hero-media-fallback i { position: relative; z-index: 1; opacity: .7; }
+.glass-dot { position: absolute; width: 120px; height: 120px; top: 22%; left: 62%; border-radius: 50%; background: rgba(255,90,31,.55); filter: blur(28px); pointer-events: none; }
 .section-title { font-size: 1.4rem; font-weight: 700; letter-spacing: -.02em; margin-bottom: 1rem; }
 .feature-card { height: 100%; padding: 1.5rem; background: #fff; border: 1px solid var(--rd-border); border-radius: 16px; transition: transform .15s ease, box-shadow .15s ease; }
 .feature-card:hover { transform: translateY(-2px); box-shadow: var(--rd-shadow); }
@@ -212,6 +214,8 @@ a:hover { color: var(--raceday-primary); }
 .stat-label { color: var(--rd-muted); font-size: .85rem; }
 .step-card { height: 100%; padding: 1.5rem; background: #fff; border: 1px solid var(--rd-border); border-radius: 16px; }
 .step-num { display: inline-flex; width: 36px; height: 36px; align-items: center; justify-content: center; border-radius: 50%; background: var(--raceday-dark); color: #fff; font-weight: 700; margin-bottom: .75rem; }
-.cta-band { padding: 2rem; border-radius: 20px; color: #fff; background: radial-gradient(circle at 90% 10%, rgba(255,90,31,.5), transparent 50%), linear-gradient(135deg, var(--raceday-dark), var(--raceday-dark-2)); }
+.cta-band { position: relative; overflow: hidden; padding: 2rem; border-radius: 20px; color: #fff; background-color: var(--raceday-dark); background-size: cover; background-position: center; }
+.cta-band::before { content: ""; position: absolute; inset: 0; background: rgba(17,20,40,.68); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
+.cta-band > * { position: relative; z-index: 1; }
 .cta-band h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: .25rem; }
 .cta-band p { color: rgba(255,255,255,.75); }
