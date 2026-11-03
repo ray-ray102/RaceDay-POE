@@ -145,6 +145,12 @@ public class AccountController : Controller
         return RedirectToAction(nameof(Login));
     }
 
+    [HttpGet]
+    public IActionResult AccessDenied()
+    {
+        return View();
+    }
+
     private void LoadRoles()
     {
         ViewBag.Roles = new SelectList(RoleNames.All);
