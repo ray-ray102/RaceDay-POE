@@ -1,8 +1,12 @@
 @{
     ViewData["Title"] = "Home";
 }
-
-<div class="text-center py-5">
-    <h1 class="display-4 fw-bold"><i class="bi bi-lightning-charge-fill text-warning"></i> RaceDay</h1>
-    <p class="lead">Find, enter and track race events - powered by the RaceDay Web API.</p>
-</div>
+<section class="hero">
+    <span class="hero-pill"><i class="bi bi-lightning-charge-fill text-warning"></i> Runs &middot; Walks &middot; Cycles</span>
+    <h1>Race day, <span class="accent">sorted.</span></h1>
+    <p class="lead">Find, enter and track race events - organisers publish, participants register, all powered by the RaceDay Web API.</p>
+    <div class="d-flex justify-content-center gap-2">
+        <a class="btn btn-raceday px-4" asp-controller="Account" asp-action="Register">Get started</a>
+        <a class="btn btn-ghost px-4" asp-controller="Account" asp-action="Login">Log in</a>
+    </div>
+</section>
