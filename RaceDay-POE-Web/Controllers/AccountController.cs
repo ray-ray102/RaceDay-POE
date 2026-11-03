@@ -74,7 +74,7 @@ public class AccountController : Controller
     {
         if (HttpContext.Session.GetInt32(SessionKeys.UserId) != null)
         {
-            return RedirectToAction("Index", "Home");
+            return RedirectToDashboard(HttpContext.Session.GetString(SessionKeys.Role));
         }
         return View(new LoginViewModel { ReturnUrl = returnUrl });
     }
@@ -124,7 +124,7 @@ public class AccountController : Controller
         }
 
         TempData["Success"] = $"Welcome back, {user.FirstName}!";
-        return RedirectToAction("Index", "Home");
+        return RedirectToDashboard(user.Role);
     }
 
     [HttpPost]
@@ -149,6 +149,16 @@ public class AccountController : Controller
     public IActionResult AccessDenied()
     {
         return View();
+    }
+
+    // Each role lands on its own dashboard after login
+    private IActionResult RedirectToDashboard(string? role)
+    {
+        if (string.Equals(role, RoleNames.Organiser, StringComparison.OrdinalIgnoreCase))
+            return RedirectToAction("Dashboard", "Organiser");
+        if (string.Equals(role, RoleNames.Participant, StringComparison.OrdinalIgnoreCase))
+            return RedirectToAction("Dashboard", "Participant");
+        return RedirectToAction("Index", "Home");
     }
 
     private void LoadRoles()
