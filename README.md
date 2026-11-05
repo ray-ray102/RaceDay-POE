@@ -1,5 +1,9 @@
 # RaceDay - Event Management Platform
 
+<p align="center">
+  <img src="docs/images/raceday-logo.gif" alt="RaceDay logo" width="420" />
+</p>
+
 ![Part 1 Validation](https://github.com/ray-ray102/RaceDay-POE/actions/workflows/part1-validation.yml/badge.svg)
 ![Part 2 and 3 CI](https://github.com/ray-ray102/RaceDay-POE/actions/workflows/ci.yml/badge.svg)
 
