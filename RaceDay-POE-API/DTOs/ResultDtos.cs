@@ -31,5 +31,8 @@ namespace RaceDay_POE_API.DTOs
         public DateTime EventDate { get; set; }
         public string ParticipantName { get; set; } = string.Empty;
         public string CategoryName { get; set; } = string.Empty;
+
+        // How many finishers were recorded for this event (for "47th out of 312")
+        public int TotalFinishers { get; set; }
     }
 }

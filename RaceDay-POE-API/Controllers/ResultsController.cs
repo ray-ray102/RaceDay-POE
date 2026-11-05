@@ -119,7 +119,7 @@ namespace RaceDay_POE_API.Controllers
                 .OrderBy(r => r.FinishPosition)
                 .ToListAsync();
 
-            return Ok(results.Select(ToDetailDto).ToList());
+            return Ok(await ToDetailDtosAsync(results));
         }
 
         // GET: api/results/mine
@@ -135,7 +135,7 @@ namespace RaceDay_POE_API.Controllers
                 .OrderByDescending(r => r.Enrolment!.Event!.EventDate)
                 .ToListAsync();
 
-            return Ok(results.Select(ToDetailDto).ToList());
+            return Ok(await ToDetailDtosAsync(results));
         }
 
         // PUT: api/results/5
@@ -209,7 +209,7 @@ namespace RaceDay_POE_API.Controllers
             };
         }
 
-        private static ResultDetailDto ToDetailDto(Result result)
+        private static ResultDetailDto ToDetailDto(Result result, int totalFinishers)
         {
             var enrolment = result.Enrolment!;
             return new ResultDetailDto
@@ -222,8 +222,22 @@ namespace RaceDay_POE_API.Controllers
                 EventName = enrolment.Event?.Name ?? string.Empty,
                 EventDate = enrolment.Event?.EventDate ?? DateTime.MinValue,
                 ParticipantName = enrolment.Participant == null ? string.Empty : enrolment.Participant.FirstName + " " + enrolment.Participant.LastName,
-                CategoryName = enrolment.Category?.Name ?? string.Empty
+                CategoryName = enrolment.Category?.Name ?? string.Empty,
+                TotalFinishers = totalFinishers
             };
+        }
+
+        // Attach each event's finisher count so the MVC can show "47th out of 312"
+        private async Task<List<ResultDetailDto>> ToDetailDtosAsync(List<Result> results)
+        {
+            var eventIds = results.Select(r => r.Enrolment!.EventId).Distinct().ToList();
+            var totals = await _context.Results
+                .Where(r => eventIds.Contains(r.Enrolment!.EventId))
+                .GroupBy(r => r.Enrolment!.EventId)
+                .Select(g => new { EventId = g.Key, Count = g.Count() })
+                .ToDictionaryAsync(x => x.EventId, x => x.Count);
+
+            return results.Select(r => ToDetailDto(r, totals.GetValueOrDefault(r.Enrolment!.EventId))).ToList();
         }
     }
 }
