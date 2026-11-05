@@ -278,25 +278,16 @@ dotnet test RaceDay-POE-API.sln
 
 Blob Storage lives only in the API. The MVC app never talks to Azure or Azurite. The browser posts a file to the web app, the web app forwards it to the API, the API checks the file, uploads through `IBlobStorageService`, and stores the public URL on the event or user.
 
-```mermaid
-sequenceDiagram
-  participant Browser
-  participant MVC as RaceDay-POE-Web
-  participant API as RaceDay-POE-API
-  participant Blob as IBlobStorageService
-  participant Store as Azure Blob / Azurite
+Upload flow in plain steps:
 
-  Browser->>MVC: multipart POST (banner or picture file)
-  MVC->>API: forward multipart to API endpoint
-  API->>API: ImageUploadValidator (type + size)
-  API->>Blob: UploadAsync(stream, contentType, container, name)
-  Blob->>Store: Put blob (public container access)
-  Store-->>Blob: blob URI
-  Blob-->>API: public URL
-  API->>API: save URL on Event.BannerImageUrl / User.ProfilePictureUrl
-  API-->>MVC: JSON with updated URL
-  MVC-->>Browser: page re-render; img src uses stored URL
-```
+1. Browser posts the banner or profile picture as multipart form data to the MVC web app.
+2. The web app forwards that file to the API endpoint.
+3. The API validates the file type and size.
+4. The API uploads the stream through IBlobStorageService into the banners or profiles container.
+5. The blob store returns a public URL.
+6. The API saves that URL on the event or user record.
+7. The web app re-renders the page and the image tag uses the stored URL.
+
 
 Event banners go through Organiser edit to `POST /api/events/{id}/banner` into `BlobStorage:BannersContainer` (default `raceday-banners`). Profile pictures go through Participant Profile to `POST /api/users/me/picture` into `BlobStorage:ProfilesContainer` (default `raceday-profiles`).
 
