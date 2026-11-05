@@ -300,3 +300,13 @@ a:hover { color: var(--raceday-primary); }
   .dash-content { padding: 1rem 1rem 1.75rem; }
   .dash-topbar { padding: .75rem 1rem; }
 }
+
+/* Dashboard pages: topbar owns the title — keep subtitle + actions only */
+.dash-content .page-header { margin: 0 0 1.25rem; align-items: center; }
+.dash-content .page-header > div > .eyebrow,
+.dash-content .page-header > div > h1 { display: none; }
+.dash-content .page-header > div > p { margin: 0; }
+.dash-content .card + .card,
+.dash-content .row + .card,
+.dash-content .card + .row { margin-top: 1rem; }
+.dash-content .rd-table { margin-bottom: 0; }

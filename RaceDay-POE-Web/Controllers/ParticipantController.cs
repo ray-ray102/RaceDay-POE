@@ -21,11 +21,19 @@ public class ParticipantController : Controller
         _api = api;
     }
 
-    // GET: /Participant/Dashboard
-    public IActionResult Dashboard()
+    // GET: /Participant/Dashboard - summary from enrolments/mine + results/mine
+    public async Task<IActionResult> Dashboard()
     {
         ViewData["FirstName"] = HttpContext.Session.GetString(SessionKeys.FirstName);
-        return View();
+        var enrolments = await _api.GetAsync<List<EnrolmentResponseDto>>("api/enrolments/mine")
+            ?? new List<EnrolmentResponseDto>();
+        var results = await _api.GetAsync<List<ResultDetailDto>>("api/results/mine")
+            ?? new List<ResultDetailDto>();
+        return View(new ParticipantDashboardViewModel
+        {
+            Enrolments = enrolments,
+            Results = results
+        });
     }
 
     // GET: /Participant/Events -> GET api/events?eventType=&location=&fromDate=

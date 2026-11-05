@@ -49,7 +49,7 @@
                     <a class="dash-nav-link @(IsActive("Organiser", "Dashboard") ? "active" : "")" asp-controller="Organiser" asp-action="Dashboard">
                         <i class="bi bi-speedometer2"></i><span>Dashboard</span>
                     </a>
-                    <a class="dash-nav-link @(IsActiveAny("Organiser", "Events", "Create", "Edit", "Delete", "Categories", "EditCategory", "Enrolments", "Results") ? "active" : "")" asp-controller="Organiser" asp-action="Events">
+                    <a class="dash-nav-link @(IsActiveAny("Organiser", "Events", "Edit", "Delete", "Categories", "EditCategory", "Enrolments", "Results") ? "active" : "")" asp-controller="Organiser" asp-action="Events">
                         <i class="bi bi-calendar-event"></i><span>My Events</span>
                     </a>
                     <a class="dash-nav-link @(IsActive("Organiser", "Create") ? "active" : "")" asp-controller="Organiser" asp-action="Create">

@@ -1,63 +1,131 @@
 @model List<RaceDay_POE_Web.Models.Api.OrganiserEventDto>
 @{
-    ViewData["Title"] = "Organiser Dashboard";
+    ViewData["Title"] = "Dashboard";
     var upcoming = Model.Count(e => e.IsUpcoming);
+    var past = Model.Count(e => !e.IsUpcoming);
     var entries = Model.Sum(e => e.EnrolmentCount);
-    var next = Model.Where(e => e.IsUpcoming).OrderBy(e => e.EventDate).FirstOrDefault();
+    var recent = Model.OrderByDescending(e => e.EventDate).Take(5).ToList();
+    string TypeBadge(string type) => type switch
+    {
+        "Run" => "rd-badge-orange",
+        "Cycle" => "rd-badge-teal",
+        _ => "rd-badge-navy"
+    };
 }
-<div class="page-header">
-    <div>
-        <div class="eyebrow">Organiser</div>
-        <h1>Welcome, @ViewData["FirstName"]</h1>
-        <p>Here's how your races are looking.</p>
-    </div>
-    <a class="btn btn-raceday" asp-action="Create"><i class="bi bi-plus-lg me-1"></i> New event</a>
-</div>
+@section TopActions {
+    <a class="btn btn-raceday btn-sm" asp-action="Create"><i class="bi bi-plus-lg me-1"></i> New event</a>
+}
+
+<p class="text-muted mb-4">Welcome back, <strong>@ViewData["FirstName"]</strong>. Here's how your races are looking.</p>
 
 <div class="row g-3 mb-4">
-    <div class="col-md-4">
-        <div class="card rd-card stat-card h-100"><div class="card-body d-flex justify-content-between">
+    <div class="col-6 col-lg-3">
+        <div class="card rd-card stat-card h-100"><div class="card-body d-flex justify-content-between align-items-start">
             <div><div class="stat-label">Total events</div><div class="stat-value">@Model.Count</div></div>
             <span class="icon-tile"><i class="bi bi-calendar-event"></i></span>
         </div></div>
     </div>
-    <div class="col-md-4">
-        <div class="card rd-card stat-card h-100"><div class="card-body d-flex justify-content-between">
+    <div class="col-6 col-lg-3">
+        <div class="card rd-card stat-card h-100"><div class="card-body d-flex justify-content-between align-items-start">
             <div><div class="stat-label">Upcoming</div><div class="stat-value">@upcoming</div></div>
             <span class="icon-tile teal"><i class="bi bi-hourglass-split"></i></span>
         </div></div>
     </div>
-    <div class="col-md-4">
-        <div class="card rd-card stat-card h-100"><div class="card-body d-flex justify-content-between">
+    <div class="col-6 col-lg-3">
+        <div class="card rd-card stat-card h-100"><div class="card-body d-flex justify-content-between align-items-start">
+            <div><div class="stat-label">Completed</div><div class="stat-value">@past</div></div>
+            <span class="icon-tile navy"><i class="bi bi-flag"></i></span>
+        </div></div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card rd-card stat-card h-100"><div class="card-body d-flex justify-content-between align-items-start">
             <div><div class="stat-label">Total entries</div><div class="stat-value">@entries</div></div>
-            <span class="icon-tile navy"><i class="bi bi-people"></i></span>
+            <span class="icon-tile"><i class="bi bi-people"></i></span>
         </div></div>
     </div>
 </div>
 
-<div class="row g-3">
+<div class="row g-3 mb-4 dash-quick-grid">
     <div class="col-md-4">
         <a asp-action="Events" class="card rd-card rd-card-hover h-100 text-reset"><div class="card-body">
             <span class="icon-tile mb-3"><i class="bi bi-list-ul"></i></span>
-            <h5>My Events</h5>
-            <p class="text-muted mb-0">
-                @if (next != null) { <text>Next up: <strong>@next.Name</strong> on @next.EventDate.ToString("dd MMM yyyy")</text> }
-                else { <text>View, edit and delete the races you've published.</text> }
-            </p>
+            <h5 class="mb-1">My Events</h5>
+            <p class="text-muted mb-0 small">View, edit and manage the races you've published.</p>
         </div></a>
     </div>
     <div class="col-md-4">
         <a asp-action="Create" class="card rd-card rd-card-hover h-100 text-reset"><div class="card-body">
             <span class="icon-tile navy mb-3"><i class="bi bi-plus-circle"></i></span>
-            <h5>Create Event</h5>
-            <p class="text-muted mb-0">Publish a new run, walk or cycle event.</p>
+            <h5 class="mb-1">Create Event</h5>
+            <p class="text-muted mb-0 small">Publish a new run, walk or cycle event.</p>
         </div></a>
     </div>
     <div class="col-md-4">
         <a asp-action="Events" class="card rd-card rd-card-hover h-100 text-reset"><div class="card-body">
             <span class="icon-tile teal mb-3"><i class="bi bi-sliders"></i></span>
-            <h5>Manage entries</h5>
-            <p class="text-muted mb-0">Open an event to manage categories, enrolments and results.</p>
+            <h5 class="mb-1">Manage entries</h5>
+            <p class="text-muted mb-0 small">Open an event for categories, enrolments and results.</p>
         </div></a>
     </div>
+</div>
+
+<div class="card rd-card overflow-hidden">
+    <div class="card-body border-bottom d-flex justify-content-between align-items-center py-3">
+        <h2 class="dash-section-title mb-0">Recent events</h2>
+        <a class="btn btn-ghost btn-sm" asp-action="Events">View all</a>
+    </div>
+    @if (!recent.Any())
+    {
+        <div class="empty-state py-5">
+            <div class="empty-icon"><i class="bi bi-calendar-x"></i></div>
+            <h5>No events yet</h5>
+            <p>Create your first race and it will show up here.</p>
+            <a class="btn btn-raceday" asp-action="Create"><i class="bi bi-plus-lg me-1"></i> Create event</a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table rd-table table-tight mb-0">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th class="text-end">Entries</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ev in recent)
+                    {
+                        <tr>
+                            <td>
+                                <div class="fw-semibold">@ev.Name</div>
+                                <div class="small text-muted"><i class="bi bi-geo-alt"></i> @ev.Location</div>
+                            </td>
+                            <td class="text-nowrap">@ev.EventDate.ToString("dd MMM yyyy")</td>
+                            <td><span class="rd-badge @TypeBadge(ev.EventType)">@ev.EventType</span></td>
+                            <td>
+                                @if (ev.IsUpcoming)
+                                {
+                                    <span class="rd-badge rd-badge-green">Upcoming</span>
+                                }
+                                else
+                                {
+                                    <span class="rd-badge rd-badge-gray">Completed</span>
+                                }
+                            </td>
+                            <td class="text-end fw-semibold">@ev.EnrolmentCount</td>
+                            <td class="text-end text-nowrap">
+                                <a class="btn btn-ghost btn-sm" asp-action="Edit" asp-route-id="@ev.EventId" title="Edit"><i class="bi bi-pencil"></i></a>
+                                <a class="btn btn-ghost btn-sm" asp-action="Enrolments" asp-route-id="@ev.EventId" title="Enrolments"><i class="bi bi-people"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
 </div>
