@@ -7,6 +7,12 @@ public class EnrolRequestDto
     public int CategoryId { get; set; }
 }
 
+// Mirrors EnrolmentStatusDto (PUT api/enrolments/{id}/status)
+public class EnrolmentStatusDto
+{
+    public string Status { get; set; } = string.Empty;
+}
+
 // Mirrors EnrolmentResponseDto
 public class EnrolmentResponseDto
 {

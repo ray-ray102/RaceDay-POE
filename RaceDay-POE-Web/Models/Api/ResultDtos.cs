@@ -1,6 +1,22 @@
 namespace RaceDay_POE_Web.Models.Api;
 
-// Mirrors ResultDetailDto (GET api/results/mine)
+// Mirrors ResultRequestDto (POST/PUT results)
+public class ResultRequestDto
+{
+    public TimeSpan FinishTime { get; set; }
+    public int FinishPosition { get; set; }
+}
+
+// Mirrors ResultResponseDto
+public class ResultResponseDto
+{
+    public int ResultsId { get; set; }
+    public int EnrolmentId { get; set; }
+    public TimeSpan FinishTime { get; set; }
+    public int FinishPosition { get; set; }
+}
+
+// Mirrors ResultDetailDto (GET api/events/{id}/results, GET api/results/mine)
 public class ResultDetailDto
 {
     public int ResultsId { get; set; }
