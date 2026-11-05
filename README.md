@@ -81,23 +81,67 @@ Public: home, about, contact, register (pick a role), login.
 
 Public home:
 
-![Public home](docs/images/public-home.jpg)
+![Public home page](docs/images/public-home.jpg)
+
+Login:
+
+![Login page](docs/images/login.png)
+
+Participant dashboard (sidebar with grey active item):
+
+![Participant dashboard](docs/images/participant-dashboard.png)
+
+Browse events with filters:
+
+![Browse events filtered by type](docs/images/participant-browse.jpg)
+
+Event details with banner and enrol:
+
+![Event details showing banner and enrolment](docs/images/participant-event-details.jpg)
+
+My Enrolments (colour-coded status):
+
+![Participant enrolments list](docs/images/participant-enrolments.png)
+
+My Results:
+
+![Participant results](docs/images/participant-results.png)
+
+Profile with picture upload:
+
+![Participant profile](docs/images/participant-profile.png)
 
 Organiser dashboard:
 
 ![Organiser dashboard](docs/images/organiser-dashboard.png)
 
-Participant dashboard:
+My Events:
 
-![Participant dashboard](docs/images/participant-dashboard.png)
+![Organiser events list](docs/images/organiser-events.png)
 
-Sidebar active state:
+Create event:
 
-![Sidebar active](docs/images/sidebar-active.png)
+![Create event form](docs/images/organiser-create.png)
 
-Mobile menu:
+Edit event with banner upload:
 
-![Mobile sidebar](docs/images/mobile-sidebar.png)
+![Edit event banner upload](docs/images/organiser-edit-banner.jpg)
+
+Categories:
+
+![Event categories](docs/images/organiser-categories.png)
+
+Organiser enrolments:
+
+![Organiser enrolments for an event](docs/images/organiser-enrolments.png)
+
+Results entry:
+
+![Organiser results entry](docs/images/organiser-results.png)
+
+Mobile offcanvas menu:
+
+![Mobile dashboard sidebar](docs/images/mobile-sidebar.png)
 
 ## Tech stack
 
