@@ -1,15 +1,16 @@
 # RaceDay - Event Management Platform
 
 <p align="center">
-  <img src="docs/images/raceday-logo.gif" alt="RaceDay logo" width="420" />
+  <img src="docs/images/raceday-logo.gif" alt="RaceDay logo" width="260" />
 </p>
 
 ![Part 1 Validation](https://github.com/ray-ray102/RaceDay-POE/actions/workflows/part1-validation.yml/badge.svg)
 ![Part 2 and 3 CI](https://github.com/ray-ray102/RaceDay-POE/actions/workflows/ci.yml/badge.svg)
 
-Odirile Masemola · ST10441421  
-Repo: https://github.com/ray-ray102/RaceDay-POE  
-Branch I worked on for Parts 2 and 3: `poe-full-web-app`
+**Student:** Raesibe Betty Lelaka  
+**Student number:** ST10485428  
+**Repository:** https://github.com/ray-ray102/RaceDay-POE  
+**Working branch (Part 2 + Part 3):** `poe-full-web-app`
 
 RaceDay is a web app for South African road running, walking and cycling events. Organisers put races online and manage entries. Participants browse upcoming events, enrol, and keep an eye on their results.
 
@@ -79,69 +80,88 @@ Public: home, about, contact, register (pick a role), login.
 
 ## Screenshots
 
-Public home:
-
-![Public home page](docs/images/public-home.jpg)
-
-Login:
-
-![Login page](docs/images/login.png)
-
-Participant dashboard (sidebar with grey active item):
-
-![Participant dashboard](docs/images/participant-dashboard.png)
-
-Browse events with filters:
-
-![Browse events filtered by type](docs/images/participant-browse.jpg)
-
-Event details with banner and enrol:
-
-![Event details showing banner and enrolment](docs/images/participant-event-details.jpg)
-
-My Enrolments (colour-coded status):
-
-![Participant enrolments list](docs/images/participant-enrolments.png)
-
-My Results:
-
-![Participant results](docs/images/participant-results.png)
-
-Profile with picture upload:
-
-![Participant profile](docs/images/participant-profile.png)
-
-Organiser dashboard:
-
-![Organiser dashboard](docs/images/organiser-dashboard.png)
-
-My Events:
-
-![Organiser events list](docs/images/organiser-events.png)
-
-Create event:
-
-![Create event form](docs/images/organiser-create.png)
-
-Edit event with banner upload:
-
-![Edit event banner upload](docs/images/organiser-edit-banner.jpg)
-
-Categories:
-
-![Event categories](docs/images/organiser-categories.png)
-
-Organiser enrolments:
-
-![Organiser enrolments for an event](docs/images/organiser-enrolments.png)
-
-Results entry:
-
-![Organiser results entry](docs/images/organiser-results.png)
-
-Mobile offcanvas menu:
-
-![Mobile dashboard sidebar](docs/images/mobile-sidebar.png)
+<table>
+<tr>
+<td width="50%" valign="top" align="center">
+<img src="docs/images/public-home.jpg" alt="Public home" width="400" /><br/>
+<em>Public home</em>
+</td>
+<td width="50%" valign="top" align="center">
+<img src="docs/images/login.png" alt="Login" width="400" /><br/>
+<em>Login</em>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top" align="center">
+<img src="docs/images/participant-dashboard.png" alt="Participant dashboard" width="400" /><br/>
+<em>Participant dashboard</em>
+</td>
+<td width="50%" valign="top" align="center">
+<img src="docs/images/participant-browse.jpg" alt="Browse events" width="400" /><br/>
+<em>Browse events with filters</em>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top" align="center">
+<img src="docs/images/participant-event-details.jpg" alt="Event details" width="400" /><br/>
+<em>Event details with banner and enrol</em>
+</td>
+<td width="50%" valign="top" align="center">
+<img src="docs/images/participant-enrolments.png" alt="My Enrolments" width="400" /><br/>
+<em>My Enrolments (colour statuses)</em>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top" align="center">
+<img src="docs/images/participant-results.png" alt="My Results" width="400" /><br/>
+<em>My Results</em>
+</td>
+<td width="50%" valign="top" align="center">
+<img src="docs/images/participant-profile.png" alt="Profile" width="400" /><br/>
+<em>Profile with picture upload</em>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top" align="center">
+<img src="docs/images/organiser-dashboard.png" alt="Organiser dashboard" width="400" /><br/>
+<em>Organiser dashboard</em>
+</td>
+<td width="50%" valign="top" align="center">
+<img src="docs/images/organiser-events.png" alt="My Events" width="400" /><br/>
+<em>My Events</em>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top" align="center">
+<img src="docs/images/organiser-create.png" alt="Create event" width="400" /><br/>
+<em>Create event</em>
+</td>
+<td width="50%" valign="top" align="center">
+<img src="docs/images/organiser-edit-banner.jpg" alt="Edit banner" width="400" /><br/>
+<em>Edit event with banner upload</em>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top" align="center">
+<img src="docs/images/organiser-categories.png" alt="Categories" width="400" /><br/>
+<em>Categories</em>
+</td>
+<td width="50%" valign="top" align="center">
+<img src="docs/images/organiser-enrolments.png" alt="Organiser enrolments" width="400" /><br/>
+<em>Organiser enrolments</em>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top" align="center">
+<img src="docs/images/organiser-results.png" alt="Results entry" width="400" /><br/>
+<em>Results entry</em>
+</td>
+<td width="50%" valign="top" align="center">
+<img src="docs/images/mobile-sidebar.png" alt="Mobile sidebar" width="280" /><br/>
+<em>Mobile offcanvas menu</em>
+</td>
+</tr>
+</table>
 
 ## Tech stack
 
@@ -349,7 +369,7 @@ docker run --rm -p 5141:8080 \
 
 Green Part 2 and 3 CI run:
 
-![Successful Part 2 and 3 CI run](docs/images/ci-green.png)
+<p align="center"><img src="docs/images/ci-green.png" alt="Successful Part 2 and 3 CI run" width="520" /></p>
 
 Older screenshots: `docs/workflow-run.png` (Part 1) and `docs/part2-ci-run.png`.
 
@@ -389,6 +409,5 @@ Unsplash: [Olek Buzunov](https://unsplash.com/photos/people-walking-in-charity-r
 
 ## Author
 
-Odirile Masemola  
-Student number: ST10441421  
-Automation of Web Applications — POE Parts 1 to 3
+**Raesibe Betty Lelaka**  
+Student Number: ST10485428
