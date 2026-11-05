@@ -1,8 +1,8 @@
-name: Part 2 CI
+name: Part 2/3 CI
 
 on:
   push:
-    branches: [ main, "part-2*", "part-3*", "final*" ]
+    branches: [ main, "part-2*", "part-3*", "final*", "poe*" ]
   pull_request:
     branches: [ main ]
 
@@ -21,8 +21,11 @@ jobs:
       - name: Restore packages
         run: dotnet restore RaceDay-POE-API.sln
 
-      - name: Build solution
+      - name: Build API, tests and MVC web
         run: dotnet build RaceDay-POE-API.sln --configuration Release --no-restore
 
-      - name: Run unit tests
-        run: dotnet test RaceDay-POE-API.sln --configuration Release --no-build --verbosity normal
+      - name: Build MVC web project explicitly
+        run: dotnet build RaceDay-POE-Web/RaceDay-POE-Web.csproj --configuration Release --no-restore
+
+      - name: Run API unit tests
+        run: dotnet test RaceDay-POE-API.Tests/RaceDay-POE-API.Tests.csproj --configuration Release --no-build --verbosity normal
