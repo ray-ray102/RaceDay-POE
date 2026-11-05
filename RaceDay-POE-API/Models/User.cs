@@ -33,7 +33,7 @@ namespace RaceDay_POE_API.Models
         [MaxLength(20)]
         public string? PhoneNumber { get; set; }
 
-        [MaxLength(300)]
+        [MaxLength(500)]
         public string? ProfilePictureUrl { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;

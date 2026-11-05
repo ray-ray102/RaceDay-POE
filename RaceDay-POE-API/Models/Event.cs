@@ -34,7 +34,7 @@ namespace RaceDay_POE_API.Models
         [MaxLength(20)]
         public string EventType { get; set; } = string.Empty;
 
-        [MaxLength(300)]
+        [MaxLength(500)]
         public string? BannerImageUrl { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;

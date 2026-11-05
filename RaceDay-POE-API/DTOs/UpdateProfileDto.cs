@@ -16,7 +16,7 @@ namespace RaceDay_POE_API.DTOs
         [MaxLength(20)]
         public string? PhoneNumber { get; set; }
 
-        [MaxLength(300)]
+        [MaxLength(500)]
         public string? ProfilePictureUrl { get; set; }
     }
 }

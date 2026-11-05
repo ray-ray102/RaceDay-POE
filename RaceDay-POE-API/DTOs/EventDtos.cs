@@ -27,7 +27,7 @@ namespace RaceDay_POE_API.DTOs
         [RegularExpression("^(Run|Walk|Cycle)$", ErrorMessage = "Event type must be Run, Walk or Cycle.")]
         public string EventType { get; set; } = string.Empty;
 
-        [MaxLength(300)]
+        [MaxLength(500)]
         public string? BannerImageUrl { get; set; }
     }
 

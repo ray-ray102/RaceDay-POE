@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using RaceDay_POE_API.Configuration;
 using RaceDay_POE_API.Data;
 using RaceDay_POE_API.Services;
 
@@ -25,6 +26,10 @@ builder.Services.AddSession(options =>
 
 // Password hashing service
 builder.Services.AddScoped<IPasswordService, PasswordService>();
+
+// Azure Blob Storage (Azurite locally; real account via ConnectionStrings:AzureBlobStorage)
+builder.Services.Configure<BlobStorageOptions>(builder.Configuration.GetSection(BlobStorageOptions.SectionName));
+builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
