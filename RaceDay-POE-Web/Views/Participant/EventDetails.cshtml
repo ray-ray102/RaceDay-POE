@@ -15,6 +15,7 @@
         "Cancelled" => "rd-badge-gray",
         _ => "rd-badge-navy"
     };
+    var hasBanner = !string.IsNullOrWhiteSpace(ev.BannerImageUrl);
     var img = ev.EventType switch
     {
         "Walk" => "images/home/walk.jpg",
@@ -36,7 +37,14 @@
 
 <div class="row g-4">
     <div class="col-lg-7">
-        <partial name="_MediaSlot" model='(img, "bi-calendar-event", "hero-media-lg")' />
+        @if (hasBanner)
+        {
+            <div class="hero-media hero-media-lg" style="background-image:url('@ev.BannerImageUrl')"></div>
+        }
+        else
+        {
+            <partial name="_MediaSlot" model='(img, "bi-calendar-event", "hero-media-lg")' />
+        }
         <div class="card rd-card mt-4">
             <div class="card-body p-4">
                 <h5 class="fw-semibold mb-3">About this event</h5>

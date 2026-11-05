@@ -6,7 +6,7 @@
     <div>
         <div class="eyebrow">Participant</div>
         <h1>My Profile</h1>
-        <p>Update your personal details. Profile picture upload will use Azure Blob Storage through the API.</p>
+        <p>Update your personal details. Upload a profile picture through the API (stored in Azure Blob Storage).</p>
     </div>
 </div>
 
@@ -69,6 +69,20 @@
                         <a class="btn btn-ghost" asp-action="Dashboard">Cancel</a>
                         <button type="submit" class="btn btn-raceday"><i class="bi bi-check2 me-1"></i> Save profile</button>
                     </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card rd-card mt-4">
+            <div class="card-body p-4">
+                <h5 class="fw-semibold mb-3">Profile picture</h5>
+                <form asp-action="UploadPicture" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label" for="pictureFile">Upload image</label>
+                        <input id="pictureFile" name="pictureFile" type="file" class="form-control" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" required />
+                        <div class="form-text">JPG, PNG or WebP up to 2 MB. Uploaded through the Part 2 API to Azure Blob Storage.</div>
+                    </div>
+                    <button type="submit" class="btn btn-raceday"><i class="bi bi-cloud-upload me-1"></i> Upload picture</button>
                 </form>
             </div>
         </div>

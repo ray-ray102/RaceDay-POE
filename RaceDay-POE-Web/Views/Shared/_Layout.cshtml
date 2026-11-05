@@ -2,6 +2,7 @@
 @{
     var signedInName = Context.Session.GetString(SessionKeys.FirstName);
     var signedInRole = Context.Session.GetString(SessionKeys.Role);
+    var signedInPicture = Context.Session.GetString(SessionKeys.ProfilePictureUrl);
     var isSignedIn = Context.Session.GetInt32(SessionKeys.UserId) != null;
     var webEnv = Context.RequestServices.GetService(typeof(Microsoft.AspNetCore.Hosting.IWebHostEnvironment)) as Microsoft.AspNetCore.Hosting.IWebHostEnvironment;
     var hasLogo = webEnv != null && System.IO.File.Exists(System.IO.Path.Combine(webEnv.WebRootPath ?? "", "images", "logo.png"));
@@ -66,7 +67,14 @@
                         {
                             <li class="nav-item">
                                 <span class="user-chip me-lg-3">
-                                    <span class="avatar">@(string.IsNullOrEmpty(signedInName) ? "?" : signedInName.Substring(0, 1).ToUpper())</span>
+                                    @if (!string.IsNullOrWhiteSpace(signedInPicture))
+                                    {
+                                        <img class="avatar avatar-img" src="@signedInPicture" alt="" />
+                                    }
+                                    else
+                                    {
+                                        <span class="avatar">@(string.IsNullOrEmpty(signedInName) ? "?" : signedInName.Substring(0, 1).ToUpper())</span>
+                                    }
                                     @signedInName
                                     <span class="rd-badge rd-badge-orange">@signedInRole</span>
                                 </span>

@@ -61,6 +61,7 @@ a:hover { color: var(--raceday-primary); }
 .user-chip {
   display: inline-flex; align-items: center; gap: .5rem; color: #fff; font-size: .9rem; font-weight: 500;
 }
+.user-chip .avatar-img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; display: inline-block; }
 .user-chip .avatar {
   width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
   background: var(--raceday-primary); color: #fff; font-weight: 700; font-size: .85rem;

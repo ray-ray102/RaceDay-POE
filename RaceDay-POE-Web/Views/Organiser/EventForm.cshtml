@@ -60,16 +60,8 @@
 
                     <div class="mb-3">
                         <label asp-for="BannerImageUrl" class="form-label">Banner image URL</label>
-                        <input asp-for="BannerImageUrl" class="form-control" placeholder="Saved after Blob upload is wired" />
+                        <input asp-for="BannerImageUrl" class="form-control" readonly placeholder="Set by uploading a file below" />
                         <span asp-validation-for="BannerImageUrl" class="small text-danger"></span>
-                    </div>
-                    <div class="mb-4">
-                        <label class="form-label">Banner image upload</label>
-                        <input type="file" class="form-control" accept="image/*" disabled />
-                        <div class="form-text">
-                            File upload is a placeholder until Azure Blob Storage is connected through the Part 2 API.
-                            The MVC app will never talk to Azure directly.
-                        </div>
                     </div>
 
                     <div class="d-flex justify-content-end gap-2 pt-3 border-top">
@@ -81,6 +73,26 @@
                 </form>
             </div>
         </div>
+        @if (Model.IsEdit)
+        {
+            <div class="card rd-card mt-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-semibold mb-3">Event banner</h5>
+                    @if (!string.IsNullOrWhiteSpace(Model.BannerImageUrl))
+                    {
+                        <div class="hero-media media-sm mb-3" style="background-image:url('@Model.BannerImageUrl')"></div>
+                    }
+                    <form asp-action="UploadBanner" asp-route-id="@Model.EventId" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label" for="bannerFile">Upload image</label>
+                            <input id="bannerFile" name="bannerFile" type="file" class="form-control" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" required />
+                            <div class="form-text">JPG, PNG or WebP up to 2 MB. Uploaded through the Part 2 API to Azure Blob Storage.</div>
+                        </div>
+                        <button type="submit" class="btn btn-raceday"><i class="bi bi-cloud-upload me-1"></i> Upload banner</button>
+                    </form>
+                </div>
+            </div>
+        }
     </div>
     <div class="col-lg-4 mt-3 mt-lg-0">
         <div class="card rd-card">
@@ -91,7 +103,7 @@
                     <li>Use a clear, searchable name.</li>
                     <li>Participants can filter by type, location and date.</li>
                     <li>Add categories after creating the event.</li>
-                    <li>Banner images will upload via Blob Storage later.</li>
+                    <li>Save the event first, then upload a banner image.</li>
                 </ul>
             </div>
         </div>
