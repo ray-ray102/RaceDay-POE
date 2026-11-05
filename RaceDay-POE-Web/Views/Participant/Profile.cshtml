@@ -1,0 +1,100 @@
+@model RaceDay_POE_Web.Models.Participant.ProfileFormViewModel
+@{
+    ViewData["Title"] = "My Profile";
+}
+<div class="page-header">
+    <div>
+        <div class="eyebrow">Participant</div>
+        <h1>My Profile</h1>
+        <p>Update your personal details. Profile picture upload will use Azure Blob Storage through the API.</p>
+    </div>
+</div>
+
+@if (ViewData["ApiError"] is string apiError)
+{
+    <div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i> @apiError</div>
+}
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card rd-card">
+            <div class="card-body p-4">
+                <form asp-action="Profile" method="post" novalidate>
+                    <input type="hidden" asp-for="Email" />
+                    <input type="hidden" asp-for="Role" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="FirstName" class="form-label"></label>
+                            <input asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="small text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="LastName" class="form-label"></label>
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="small text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" readonly />
+                            <div class="form-text">Email is set at registration and cannot be changed here.</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="PhoneNumber" class="form-label"></label>
+                            <input asp-for="PhoneNumber" class="form-control" placeholder="Optional" />
+                            <span asp-validation-for="PhoneNumber" class="small text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ProfilePictureUrl" class="form-label"></label>
+                        <input asp-for="ProfilePictureUrl" class="form-control" placeholder="Saved after Blob upload is wired" />
+                        <span asp-validation-for="ProfilePictureUrl" class="small text-danger"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Profile picture upload</label>
+                        <input type="file" class="form-control" accept="image/*" disabled />
+                        <div class="form-text">
+                            File upload is a placeholder until Azure Blob Storage is connected through the Part 2 API.
+                            The MVC app will never talk to Azure directly.
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                        <a class="btn btn-ghost" asp-action="Dashboard">Cancel</a>
+                        <button type="submit" class="btn btn-raceday"><i class="bi bi-check2 me-1"></i> Save profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card rd-card">
+            <div class="card-body text-center p-4">
+                @if (!string.IsNullOrWhiteSpace(Model.ProfilePictureUrl))
+                {
+                    <img src="@Model.ProfilePictureUrl" alt="Profile" class="rounded-circle mb-3" style="width:96px;height:96px;object-fit:cover;" />
+                }
+                else
+                {
+                    <div class="mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle"
+                         style="width:96px;height:96px;background:#eef0fb;color:var(--raceday-dark-2);font-size:2rem;font-weight:700;">
+                        @(string.IsNullOrEmpty(Model.FirstName) ? "?" : Model.FirstName.Substring(0, 1).ToUpper())
+                    </div>
+                }
+                <h5 class="mb-1">@Model.FirstName @Model.LastName</h5>
+                <div class="text-muted small mb-2">@Model.Email</div>
+                <span class="rd-badge rd-badge-orange">@Model.Role</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
