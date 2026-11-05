@@ -251,10 +251,9 @@ a:hover { color: var(--raceday-primary); }
   text-decoration: none; transition: background .15s ease, color .15s ease;
 }
 .dash-nav-link i { font-size: 1.05rem; width: 1.2rem; text-align: center; opacity: .9; }
-.dash-nav-link:hover { background: rgba(255,255,255,.08); color: #fff !important; }
+.dash-nav-link:hover { background: rgba(255,255,255,.12); color: #fff !important; }
 .dash-nav-link.active {
-  background: rgba(255,90,31,.18); color: #fff !important;
-  box-shadow: inset 3px 0 0 var(--raceday-primary);
+  background: rgba(255,255,255,.08); color: #fff !important;
 }
 .dash-sidebar-footer {
   margin-top: auto; padding: 1rem 1rem 1.15rem; border-top: 1px solid rgba(255,255,255,.08);
