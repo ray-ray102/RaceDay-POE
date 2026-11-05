@@ -1,4 +1,4 @@
-name: Part 2/3 CI
+name: Part 2 and 3 CI
 
 on:
   push:
