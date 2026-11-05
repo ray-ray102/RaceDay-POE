@@ -1,0 +1,86 @@
+@model RaceDay_POE_Web.Models.Organiser.EnrolmentsPageViewModel
+@{
+    ViewData["Title"] = "Event Enrolments";
+    var ev = Model.Event;
+    string StatusBadge(string status) => status switch
+    {
+        "Confirmed" => "rd-badge-green",
+        "Pending" => "rd-badge-amber",
+        "Cancelled" => "rd-badge-gray",
+        _ => "rd-badge-navy"
+    };
+}
+<div class="page-header">
+    <div>
+        <a class="small text-muted" asp-action="Events"><i class="bi bi-arrow-left"></i> Back to My Events</a>
+        <div class="eyebrow mt-2">Organiser</div>
+        <h1>Enrolments</h1>
+        <p>Participants entered for <strong>@ev.Name</strong>.</p>
+    </div>
+    <a class="btn btn-ghost" asp-action="Results" asp-route-id="@ev.EventId"><i class="bi bi-trophy me-1"></i> Results</a>
+</div>
+
+@if (ViewData["ApiError"] is string apiError)
+{
+    <div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i> @apiError</div>
+}
+
+<div class="card rd-card overflow-hidden">
+    @if (!Model.Enrolments.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon"><i class="bi bi-people"></i></div>
+            <h5>No enrolments yet</h5>
+            <p>When participants enter this event they will appear here with their category and status.</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table rd-table">
+                <thead>
+                    <tr>
+                        <th>Participant</th>
+                        <th>Category</th>
+                        <th>Enrolled</th>
+                        <th>Status</th>
+                        <th class="text-end">Update</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var en in Model.Enrolments)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@en.ParticipantName</td>
+                            <td>@en.CategoryName</td>
+                            <td class="text-nowrap">@en.EnrolmentDate.ToString("dd MMM yyyy")</td>
+                            <td><span class="rd-badge @StatusBadge(en.Status)">@en.Status</span></td>
+                            <td class="text-end">
+                                @if (en.Status != "Cancelled")
+                                {
+                                    <form asp-action="UpdateEnrolmentStatus" method="post" class="d-inline-flex gap-2 align-items-center justify-content-end">
+                                        <input type="hidden" name="enrolmentId" value="@en.EnrolmentId" />
+                                        <input type="hidden" name="eventId" value="@ev.EventId" />
+                                        <select name="status" class="form-select form-select-sm" style="width:auto;min-width:8rem" required>
+                                            <option value="">Choose...</option>
+                                            @if (en.Status != "Confirmed")
+                                            {
+                                                <option value="Confirmed">Confirm</option>
+                                            }
+                                            <option value="Cancelled">Cancel</option>
+                                        </select>
+                                        <button type="submit" class="btn btn-ghost btn-sm">Save</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span class="small text-muted">No further changes</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

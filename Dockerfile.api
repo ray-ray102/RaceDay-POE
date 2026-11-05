@@ -1,0 +1,26 @@
+# RaceDay Part 2 API - multi-stage .NET 8 image
+# docker build -t raceday-api -f Dockerfile.api .
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+COPY RaceDay-POE-API/RaceDay-POE-API.csproj RaceDay-POE-API/
+RUN dotnet restore RaceDay-POE-API/RaceDay-POE-API.csproj
+
+COPY RaceDay-POE-API/ RaceDay-POE-API/
+RUN dotnet publish RaceDay-POE-API/RaceDay-POE-API.csproj -c Release -o /app/publish --no-restore
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+WORKDIR /app
+
+RUN adduser --disabled-password --gecos "" appuser && chown -R appuser /app
+USER appuser
+
+COPY --from=build /app/publish .
+
+ENV ASPNETCORE_URLS=http://+:8080
+ENV ASPNETCORE_ENVIRONMENT=Production
+
+EXPOSE 8080
+
+ENTRYPOINT ["dotnet", "RaceDay-POE-API.dll"]

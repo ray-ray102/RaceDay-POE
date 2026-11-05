@@ -1,0 +1,56 @@
+@model RaceDay_POE_Web.Models.Organiser.CategoryFormViewModel
+@{
+    ViewData["Title"] = "Edit Category";
+}
+<div class="page-header">
+    <div>
+        <a class="small text-muted" asp-action="Categories" asp-route-id="@Model.EventId"><i class="bi bi-arrow-left"></i> Back to Categories</a>
+        <h1 class="mt-2">Edit category</h1>
+        <p>Update the category for <strong>@Model.EventName</strong>.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-7">
+        <div class="card rd-card">
+            <div class="card-body p-4">
+                <form asp-action="EditCategory" asp-route-id="@Model.CategoryId" method="post" novalidate>
+                    <input type="hidden" asp-for="EventId" />
+                    <input type="hidden" asp-for="EventName" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="small text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label"></label>
+                        <input asp-for="Description" class="form-control" />
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label asp-for="MinAge" class="form-label"></label>
+                            <input asp-for="MinAge" class="form-control" />
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label asp-for="MaxAge" class="form-label"></label>
+                            <input asp-for="MaxAge" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label asp-for="DistanceKm" class="form-label"></label>
+                        <input asp-for="DistanceKm" class="form-control" step="0.01" />
+                    </div>
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                        <a class="btn btn-ghost" asp-action="Categories" asp-route-id="@Model.EventId">Cancel</a>
+                        <button type="submit" class="btn btn-raceday"><i class="bi bi-check2 me-1"></i> Save category</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

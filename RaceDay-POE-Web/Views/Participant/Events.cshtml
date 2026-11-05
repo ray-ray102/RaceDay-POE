@@ -1,0 +1,115 @@
+@model RaceDay_POE_Web.Models.Participant.EventBrowseViewModel
+@{
+    ViewData["Title"] = "Browse Events";
+    string TypeBadge(string type) => type switch
+    {
+        "Run" => "rd-badge-orange",
+        "Cycle" => "rd-badge-teal",
+        _ => "rd-badge-navy"
+    };
+    string TypeIcon(string type) => type switch
+    {
+        "Run" => "bi-person-walking",
+        "Cycle" => "bi-bicycle",
+        "Walk" => "bi-signpost-2",
+        _ => "bi-calendar-event"
+    };
+}
+<div class="page-header">
+    <div>
+        <div class="eyebrow">Participant</div>
+        <h1>Upcoming events</h1>
+        <p>Filter by type, location or date and find your next race.</p>
+    </div>
+</div>
+
+<div class="card rd-card mb-4">
+    <div class="card-body">
+        <form method="get" asp-action="Events" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label" for="eventType">Event type</label>
+                <select class="form-select" id="eventType" name="eventType">
+                    <option value="">All types</option>
+                    @if (Model.EventType == "Run") { <option value="Run" selected>Run</option> } else { <option value="Run">Run</option> }
+                    @if (Model.EventType == "Walk") { <option value="Walk" selected>Walk</option> } else { <option value="Walk">Walk</option> }
+                    @if (Model.EventType == "Cycle") { <option value="Cycle" selected>Cycle</option> } else { <option value="Cycle">Cycle</option> }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label" for="location">Location</label>
+                <input class="form-control" id="location" name="location" value="@Model.Location" placeholder="e.g. Johannesburg" />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label" for="fromDate">From date</label>
+                <input class="form-control" type="date" id="fromDate" name="fromDate" value="@(Model.FromDate?.ToString("yyyy-MM-dd"))" />
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-raceday flex-grow-1"><i class="bi bi-funnel me-1"></i> Filter</button>
+                <a class="btn btn-ghost" asp-action="Events">Clear</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.ApiError))
+{
+    <div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i> @Model.ApiError</div>
+}
+
+@if (!Model.Events.Any() && string.IsNullOrEmpty(Model.ApiError))
+{
+    <div class="card rd-card">
+        <div class="empty-state">
+            <div class="empty-icon"><i class="bi bi-calendar-x"></i></div>
+            <h5>No upcoming events</h5>
+            <p>Try clearing the filters or check back soon for new races.</p>
+        </div>
+    </div>
+}
+else if (Model.Events.Any())
+{
+    <div class="row g-3">
+        @foreach (var ev in Model.Events)
+        {
+            var img = ev.EventType switch
+            {
+                "Walk" => "images/home/walk.jpg",
+                "Cycle" => "images/home/cycle.jpg",
+                _ => "images/home/run.jpg"
+            };
+            <div class="col-md-6 col-xl-4">
+                <div class="card rd-card rd-card-hover h-100 overflow-hidden">
+                    @if (!string.IsNullOrWhiteSpace(ev.BannerImageUrl))
+                    {
+                        <div class="hero-media media-sm" style="background-image:url('@ev.BannerImageUrl')"></div>
+                    }
+                    else
+                    {
+                        <partial name="_MediaSlot" model='(img, TypeIcon(ev.EventType), "media-sm")' />
+                    }
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                            <h5 class="mb-0">@ev.Name</h5>
+                            <span class="rd-badge @TypeBadge(ev.EventType)">@ev.EventType</span>
+                        </div>
+                        <div class="small text-muted mb-1"><i class="bi bi-calendar3"></i> @ev.EventDate.ToString("dd MMM yyyy, HH:mm")</div>
+                        <div class="small text-muted mb-2"><i class="bi bi-geo-alt"></i> @ev.Location</div>
+                        @if (ev.DistanceKm.HasValue)
+                        {
+                            <div class="small text-muted mb-3"><i class="bi bi-signpost"></i> @ev.DistanceKm.Value.ToString("0.##") km</div>
+                        }
+                        else
+                        {
+                            <div class="mb-3"></div>
+                        }
+                        <div class="mt-auto">
+                            <a class="btn btn-raceday btn-sm" asp-action="EventDetails" asp-route-id="@ev.EventId">
+                                View details <i class="bi bi-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

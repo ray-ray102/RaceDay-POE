@@ -1,0 +1,57 @@
+@model RaceDay_POE_Web.Models.Home.ContactViewModel
+@{
+    ViewData["Title"] = "Contact";
+}
+<section class="page-hero text-center">
+    <span class="hero-pill"><i class="bi bi-chat-dots-fill text-orange"></i> Contact</span>
+    <h1>Get in <span class="accent">touch</span></h1>
+    <p class="lead mx-auto" style="max-width:560px">Questions about an event, your account or hosting a race? Send us a message.</p>
+</section>
+
+<div class="row g-4 pb-4">
+    <div class="col-lg-4">
+        <div class="d-grid gap-3">
+            <div class="feature-card"><span class="feature-icon"><i class="bi bi-envelope"></i></span><h3>Email</h3><p>support@raceday.co.za</p></div>
+            <div class="feature-card"><span class="feature-icon"><i class="bi bi-telephone"></i></span><h3>Phone</h3><p>+27 11 000 0000 &middot; Mon-Fri, 08:00-17:00</p></div>
+            <div class="feature-card"><span class="feature-icon"><i class="bi bi-geo-alt"></i></span><h3>Office</h3><p>Johannesburg, South Africa</p></div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="rd-card p-4">
+            <h2 class="section-title">Send a message</h2>
+            <form asp-action="Contact" method="post" novalidate>
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger small mb-2"></div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="Name" class="form-label"></label>
+                        <input asp-for="Name" class="form-control" placeholder="Your name" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control" placeholder="you@example.com" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="Subject" class="form-label"></label>
+                        <input asp-for="Subject" class="form-control" placeholder="How can we help?" />
+                        <span asp-validation-for="Subject" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="Message" class="form-label"></label>
+                        <textarea asp-for="Message" class="form-control" rows="5" placeholder="Write your message"></textarea>
+                        <span asp-validation-for="Message" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-raceday px-4"><i class="bi bi-send me-1"></i> Send message</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

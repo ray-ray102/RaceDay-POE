@@ -1,0 +1,123 @@
+@model RaceDay_POE_Web.Models.Participant.ParticipantDashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    var confirmed = Model.Enrolments.Count(e => e.Status == "Confirmed");
+    var pending = Model.Enrolments.Count(e => e.Status == "Pending");
+    var recentEnrolments = Model.Enrolments.OrderByDescending(e => e.EnrolmentDate).Take(5).ToList();
+    string StatusBadge(string status) => status switch
+    {
+        "Confirmed" => "rd-badge-green",
+        "Pending" => "rd-badge-amber",
+        "Cancelled" => "rd-badge-gray",
+        _ => "rd-badge-navy"
+    };
+}
+@section TopActions {
+    <a class="btn btn-raceday btn-sm" asp-action="Events"><i class="bi bi-search me-1"></i> Browse events</a>
+}
+
+<p class="text-muted mb-4">Welcome back, <strong>@ViewData["FirstName"]</strong>. Find races, manage entries and track results.</p>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="card rd-card stat-card h-100"><div class="card-body d-flex justify-content-between align-items-start">
+            <div><div class="stat-label">Enrolments</div><div class="stat-value">@Model.Enrolments.Count</div></div>
+            <span class="icon-tile"><i class="bi bi-card-checklist"></i></span>
+        </div></div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card rd-card stat-card h-100"><div class="card-body d-flex justify-content-between align-items-start">
+            <div><div class="stat-label">Confirmed</div><div class="stat-value">@confirmed</div></div>
+            <span class="icon-tile teal"><i class="bi bi-check-circle"></i></span>
+        </div></div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card rd-card stat-card h-100"><div class="card-body d-flex justify-content-between align-items-start">
+            <div><div class="stat-label">Pending</div><div class="stat-value">@pending</div></div>
+            <span class="icon-tile navy"><i class="bi bi-hourglass-split"></i></span>
+        </div></div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card rd-card stat-card h-100"><div class="card-body d-flex justify-content-between align-items-start">
+            <div><div class="stat-label">Results</div><div class="stat-value">@Model.Results.Count</div></div>
+            <span class="icon-tile"><i class="bi bi-trophy"></i></span>
+        </div></div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4 dash-quick-grid">
+    <div class="col-md-6 col-xl-3">
+        <a asp-action="Events" class="card rd-card rd-card-hover h-100 text-reset"><div class="card-body">
+            <span class="icon-tile mb-3"><i class="bi bi-search"></i></span>
+            <h5 class="mb-1">Browse Events</h5>
+            <p class="text-muted mb-0 small">Filter upcoming runs, walks and cycles.</p>
+        </div></a>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <a asp-action="Enrolments" class="card rd-card rd-card-hover h-100 text-reset"><div class="card-body">
+            <span class="icon-tile navy mb-3"><i class="bi bi-card-checklist"></i></span>
+            <h5 class="mb-1">My Enrolments</h5>
+            <p class="text-muted mb-0 small">Every event you have entered.</p>
+        </div></a>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <a asp-action="Results" class="card rd-card rd-card-hover h-100 text-reset"><div class="card-body">
+            <span class="icon-tile teal mb-3"><i class="bi bi-trophy"></i></span>
+            <h5 class="mb-1">My Results</h5>
+            <p class="text-muted mb-0 small">Finish times and positions.</p>
+        </div></a>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <a asp-action="Profile" class="card rd-card rd-card-hover h-100 text-reset"><div class="card-body">
+            <span class="icon-tile mb-3"><i class="bi bi-person"></i></span>
+            <h5 class="mb-1">Profile</h5>
+            <p class="text-muted mb-0 small">Update your details and photo.</p>
+        </div></a>
+    </div>
+</div>
+
+<div class="card rd-card overflow-hidden">
+    <div class="card-body border-bottom d-flex justify-content-between align-items-center py-3">
+        <h2 class="dash-section-title mb-0">Recent enrolments</h2>
+        <a class="btn btn-ghost btn-sm" asp-action="Enrolments">View all</a>
+    </div>
+    @if (!recentEnrolments.Any())
+    {
+        <div class="empty-state py-5">
+            <div class="empty-icon"><i class="bi bi-card-checklist"></i></div>
+            <h5>No enrolments yet</h5>
+            <p>Browse upcoming events and enter your first race.</p>
+            <a class="btn btn-raceday" asp-action="Events"><i class="bi bi-search me-1"></i> Browse events</a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table rd-table table-tight mb-0">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Category</th>
+                        <th>Enrolled</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var en in recentEnrolments)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@en.EventName</td>
+                            <td>@en.CategoryName</td>
+                            <td class="text-nowrap">@en.EnrolmentDate.ToString("dd MMM yyyy")</td>
+                            <td><span class="rd-badge @StatusBadge(en.Status)">@en.Status</span></td>
+                            <td class="text-end">
+                                <a class="btn btn-ghost btn-sm" asp-action="EventDetails" asp-route-id="@en.EventId">View</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

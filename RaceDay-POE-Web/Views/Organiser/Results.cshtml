@@ -1,0 +1,116 @@
+@model RaceDay_POE_Web.Models.Organiser.ResultsPageViewModel
+@{
+    ViewData["Title"] = "Results Entry";
+    var ev = Model.Event;
+    var captureId = ViewData["CaptureEnrolmentId"] as int?;
+    var captureTime = ViewData["CaptureFinishTime"] as string ?? "00:00:00";
+    var capturePos = ViewData["CaptureFinishPosition"] as int?;
+    string StatusBadge(string status) => status switch
+    {
+        "Confirmed" => "rd-badge-green",
+        "Pending" => "rd-badge-amber",
+        "Cancelled" => "rd-badge-gray",
+        _ => "rd-badge-navy"
+    };
+}
+<div class="page-header">
+    <div>
+        <a class="small text-muted" asp-action="Events"><i class="bi bi-arrow-left"></i> Back to My Events</a>
+        <div class="eyebrow mt-2">Organiser</div>
+        <h1>Results entry</h1>
+        <p>Capture finish times and positions for <strong>@ev.Name</strong>. Only confirmed enrolments can receive a result.</p>
+    </div>
+    <a class="btn btn-ghost" asp-action="Enrolments" asp-route-id="@ev.EventId"><i class="bi bi-people me-1"></i> Enrolments</a>
+</div>
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+<div class="card rd-card overflow-hidden">
+    @if (!Model.Rows.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon"><i class="bi bi-trophy"></i></div>
+            <h5>No enrolments yet</h5>
+            <p>Confirm participant enrolments first, then capture their finish times here.</p>
+            <a class="btn btn-ghost" asp-action="Enrolments" asp-route-id="@ev.EventId">View enrolments</a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table rd-table align-middle">
+                <thead>
+                    <tr>
+                        <th>Participant</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Finish time</th>
+                        <th>Position</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in Model.Rows)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@row.ParticipantName</td>
+                            <td>@row.CategoryName</td>
+                            <td><span class="rd-badge @StatusBadge(row.Status)">@row.Status</span></td>
+                            @if (row.ResultsId.HasValue)
+                            {
+                                <td colspan="3">
+                                    <form asp-action="UpdateResult" method="post" class="row g-2 align-items-end">
+                                        <input type="hidden" name="eventId" value="@ev.EventId" />
+                                        <input type="hidden" name="resultsId" value="@row.ResultsId" />
+                                        <input type="hidden" name="EnrolmentId" value="@row.EnrolmentId" />
+                                        <div class="col-md-4">
+                                            <label class="form-label small mb-1">Finish time</label>
+                                            <input name="FinishTime" class="form-control form-control-sm" value="@row.FinishTime!.Value.ToString(@"hh\:mm\:ss")" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label small mb-1">Position</label>
+                                            <input name="FinishPosition" type="number" min="1" class="form-control form-control-sm" value="@row.FinishPosition" />
+                                        </div>
+                                        <div class="col-md-5 d-flex gap-2">
+                                            <button type="submit" class="btn btn-ghost btn-sm">Save</button>
+                                        </div>
+                                    </form>
+                                    <form asp-action="DeleteResult" method="post" class="mt-1" onsubmit="return confirm('Remove this result?');">
+                                        <input type="hidden" name="eventId" value="@ev.EventId" />
+                                        <input type="hidden" name="resultsId" value="@row.ResultsId" />
+                                        <button type="submit" class="btn btn-ghost btn-sm text-danger">Remove result</button>
+                                    </form>
+                                </td>
+                            }
+                            else if (row.Status == "Confirmed")
+                            {
+                                var isCapture = captureId == row.EnrolmentId;
+                                <td colspan="3">
+                                    <form asp-action="CaptureResult" method="post" class="row g-2 align-items-end">
+                                        <input type="hidden" name="eventId" value="@ev.EventId" />
+                                        <input type="hidden" name="EnrolmentId" value="@row.EnrolmentId" />
+                                        <div class="col-md-4">
+                                            <label class="form-label small mb-1">Finish time</label>
+                                            <input name="FinishTime" class="form-control form-control-sm" value="@(isCapture ? captureTime : "00:00:00")" placeholder="hh:mm:ss" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label small mb-1">Position</label>
+                                            <input name="FinishPosition" type="number" min="1" class="form-control form-control-sm" value="@(isCapture ? capturePos : null)" />
+                                        </div>
+                                        <div class="col-md-5">
+                                            <button type="submit" class="btn btn-raceday btn-sm"><i class="bi bi-check2 me-1"></i> Capture</button>
+                                        </div>
+                                    </form>
+                                </td>
+                            }
+                            else
+                            {
+                                <td colspan="3" class="small text-muted">Confirm this enrolment before capturing a result.</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

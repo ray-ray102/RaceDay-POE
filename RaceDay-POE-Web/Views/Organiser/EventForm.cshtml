@@ -1,0 +1,115 @@
+@model RaceDay_POE_Web.Models.Organiser.EventFormViewModel
+@{
+    ViewData["Title"] = Model.IsEdit ? "Edit Event" : "Create Event";
+    var action = Model.IsEdit ? "Edit" : "Create";
+}
+<div class="page-header">
+    <div>
+        <a class="small text-muted" asp-action="Events"><i class="bi bi-arrow-left"></i> Back to My Events</a>
+        <h1 class="mt-2">@(Model.IsEdit ? "Edit event" : "Create a new event")</h1>
+        <p>@(Model.IsEdit ? "Update the details participants will see." : "Fill in the details and publish your race.")</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card rd-card">
+            <div class="card-body p-4">
+                <form asp-action="@action" asp-route-id="@Model.EventId" method="post" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label"></label>
+                        <input asp-for="Name" class="form-control" placeholder="e.g. Soweto Sunrise 10K" />
+                        <span asp-validation-for="Name" class="small text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label"></label>
+                        <textarea asp-for="Description" class="form-control" rows="4" placeholder="Route, start point, what to bring..."></textarea>
+                        <span asp-validation-for="Description" class="small text-danger"></span>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="EventDate" class="form-label"></label>
+                            <input asp-for="EventDate" type="datetime-local" class="form-control" asp-format="{0:yyyy-MM-ddTHH:mm}" />
+                            <span asp-validation-for="EventDate" class="small text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Location" class="form-label"></label>
+                            <input asp-for="Location" class="form-control" placeholder="e.g. Johannesburg" />
+                            <span asp-validation-for="Location" class="small text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="EventType" class="form-label"></label>
+                            <select asp-for="EventType" class="form-select">
+                                <option value="">Choose a type</option>
+                                <option value="Run">Run</option>
+                                <option value="Walk">Walk</option>
+                                <option value="Cycle">Cycle</option>
+                            </select>
+                            <span asp-validation-for="EventType" class="small text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="DistanceKm" class="form-label"></label>
+                            <input asp-for="DistanceKm" class="form-control" step="0.01" min="0.01" placeholder="Optional" />
+                            <span asp-validation-for="DistanceKm" class="small text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="BannerImageUrl" class="form-label">Banner image URL</label>
+                        <input asp-for="BannerImageUrl" class="form-control" readonly placeholder="Set by uploading a file below" />
+                        <span asp-validation-for="BannerImageUrl" class="small text-danger"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                        <a class="btn btn-ghost" asp-action="Events">Cancel</a>
+                        <button type="submit" class="btn btn-raceday">
+                            <i class="bi bi-check2 me-1"></i> @(Model.IsEdit ? "Save changes" : "Create event")
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        @if (Model.IsEdit)
+        {
+            <div class="card rd-card mt-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-semibold mb-3">Event banner</h5>
+                    @if (!string.IsNullOrWhiteSpace(Model.BannerImageUrl))
+                    {
+                        <div class="hero-media media-sm mb-3" style="background-image:url('@Model.BannerImageUrl')"></div>
+                    }
+                    <form asp-action="UploadBanner" asp-route-id="@Model.EventId" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label" for="bannerFile">Upload image</label>
+                            <input id="bannerFile" name="bannerFile" type="file" class="form-control" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" required />
+                            <div class="form-text">JPG, PNG or WebP up to 2 MB. Uploaded through the Part 2 API to Azure Blob Storage.</div>
+                        </div>
+                        <button type="submit" class="btn btn-raceday"><i class="bi bi-cloud-upload me-1"></i> Upload banner</button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="col-lg-4 mt-3 mt-lg-0">
+        <div class="card rd-card">
+            <div class="card-body">
+                <span class="icon-tile navy mb-3"><i class="bi bi-lightbulb"></i></span>
+                <h6 class="fw-semibold">Tips</h6>
+                <ul class="small text-muted ps-3 mb-0">
+                    <li>Use a clear, searchable name.</li>
+                    <li>Participants can filter by type, location and date.</li>
+                    <li>Add categories after creating the event.</li>
+                    <li>Save the event first, then upload a banner image.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,66 @@
+@model List<RaceDay_POE_Web.Models.Api.EnrolmentResponseDto>
+@{
+    ViewData["Title"] = "My Enrolments";
+    string StatusBadge(string status) => status switch
+    {
+        "Confirmed" => "rd-badge-green",
+        "Pending" => "rd-badge-amber",
+        "Cancelled" => "rd-badge-gray",
+        _ => "rd-badge-navy"
+    };
+}
+<div class="page-header">
+    <div>
+        <div class="eyebrow">Participant</div>
+        <h1>My Enrolments</h1>
+        <p>Every event you have entered, with colour-coded status.</p>
+    </div>
+    <a class="btn btn-raceday" asp-action="Events"><i class="bi bi-search me-1"></i> Browse events</a>
+</div>
+
+@if (ViewData["ApiError"] is string apiError)
+{
+    <div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i> @apiError</div>
+}
+
+<div class="card rd-card overflow-hidden">
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon"><i class="bi bi-card-checklist"></i></div>
+            <h5>No enrolments yet</h5>
+            <p>Browse upcoming events and pick a category to enter your first race.</p>
+            <a class="btn btn-raceday" asp-action="Events"><i class="bi bi-search me-1"></i> Browse events</a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table rd-table">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Category</th>
+                        <th>Enrolled</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var en in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@en.EventName</td>
+                            <td>@en.CategoryName</td>
+                            <td class="text-nowrap">@en.EnrolmentDate.ToString("dd MMM yyyy")</td>
+                            <td><span class="rd-badge @StatusBadge(en.Status)">@en.Status</span></td>
+                            <td class="text-end">
+                                <a class="btn btn-ghost btn-sm" asp-action="EventDetails" asp-route-id="@en.EventId">View event</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

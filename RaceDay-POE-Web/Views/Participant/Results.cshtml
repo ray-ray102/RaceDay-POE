@@ -1,0 +1,79 @@
+@model List<RaceDay_POE_Web.Models.Api.ResultDetailDto>
+@{
+    ViewData["Title"] = "My Results";
+    string Ordinal(int n)
+    {
+        var abs = Math.Abs(n);
+        var mod100 = abs % 100;
+        if (mod100 >= 11 && mod100 <= 13) return n + "th";
+        return (abs % 10) switch
+        {
+            1 => n + "st",
+            2 => n + "nd",
+            3 => n + "rd",
+            _ => n + "th"
+        };
+    }
+}
+<div class="page-header">
+    <div>
+        <div class="eyebrow">Participant</div>
+        <h1>My Results</h1>
+        <p>Your personal race history once organisers publish finish times.</p>
+    </div>
+</div>
+
+@if (ViewData["ApiError"] is string apiError)
+{
+    <div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i> @apiError</div>
+}
+
+<div class="card rd-card overflow-hidden">
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon"><i class="bi bi-trophy"></i></div>
+            <h5>No results yet</h5>
+            <p>Results appear here after an organiser captures finish times for events you entered.</p>
+            <a class="btn btn-ghost" asp-action="Enrolments">View my enrolments</a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table rd-table">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Finish time</th>
+                        <th>Position</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var r in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@r.EventName</td>
+                            <td class="text-nowrap">@r.EventDate.ToString("dd MMM yyyy")</td>
+                            <td>@r.CategoryName</td>
+                            <td class="text-nowrap">@r.FinishTime.ToString(@"hh\:mm\:ss")</td>
+                            <td>
+                                @if (r.TotalFinishers > 0)
+                                {
+                                    <span class="fw-semibold">@Ordinal(r.FinishPosition)</span>
+                                    <span class="text-muted"> out of @r.TotalFinishers finishers</span>
+                                }
+                                else
+                                {
+                                    <span class="fw-semibold">@Ordinal(r.FinishPosition)</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

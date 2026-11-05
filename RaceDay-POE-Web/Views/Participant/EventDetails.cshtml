@@ -1,0 +1,158 @@
+@model RaceDay_POE_Web.Models.Participant.EventDetailsViewModel
+@{
+    ViewData["Title"] = Model.Event.Name;
+    var ev = Model.Event;
+    string TypeBadge(string type) => type switch
+    {
+        "Run" => "rd-badge-orange",
+        "Cycle" => "rd-badge-teal",
+        _ => "rd-badge-navy"
+    };
+    string StatusBadge(string? status) => status switch
+    {
+        "Confirmed" => "rd-badge-green",
+        "Pending" => "rd-badge-amber",
+        "Cancelled" => "rd-badge-gray",
+        _ => "rd-badge-navy"
+    };
+    var hasBanner = !string.IsNullOrWhiteSpace(ev.BannerImageUrl);
+    var img = ev.EventType switch
+    {
+        "Walk" => "images/home/walk.jpg",
+        "Cycle" => "images/home/cycle.jpg",
+        _ => "images/home/run.jpg"
+    };
+}
+<div class="page-header">
+    <div>
+        <a class="small text-muted" asp-action="Events"><i class="bi bi-arrow-left"></i> Back to Browse Events</a>
+        <h1 class="mt-2">@ev.Name</h1>
+        <p class="mb-0">
+            <span class="rd-badge @TypeBadge(ev.EventType)">@ev.EventType</span>
+            <span class="ms-2 text-muted"><i class="bi bi-calendar3"></i> @ev.EventDate.ToString("dd MMM yyyy, HH:mm")</span>
+            <span class="ms-2 text-muted"><i class="bi bi-geo-alt"></i> @ev.Location</span>
+        </p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        @if (hasBanner)
+        {
+            <div class="hero-media hero-media-lg" style="background-image:url('@ev.BannerImageUrl')"></div>
+        }
+        else
+        {
+            <partial name="_MediaSlot" model='(img, "bi-calendar-event", "hero-media-lg")' />
+        }
+        <div class="card rd-card mt-4">
+            <div class="card-body p-4">
+                <h5 class="fw-semibold mb-3">About this event</h5>
+                @if (!string.IsNullOrWhiteSpace(ev.Description))
+                {
+                    <p class="mb-3">@ev.Description</p>
+                }
+                else
+                {
+                    <p class="text-muted mb-3">No description has been added yet.</p>
+                }
+                <div class="row g-3">
+                    <div class="col-sm-4">
+                        <div class="small text-muted">Distance</div>
+                        <div class="fw-semibold">@(ev.DistanceKm.HasValue ? ev.DistanceKm.Value.ToString("0.##") + " km" : "See categories")</div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="small text-muted">Type</div>
+                        <div class="fw-semibold">@ev.EventType</div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="small text-muted">Categories</div>
+                        <div class="fw-semibold">@ev.Categories.Count</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card rd-card mt-4">
+            <div class="card-body p-4">
+                <h5 class="fw-semibold mb-3">Available categories</h5>
+                @if (!ev.Categories.Any())
+                {
+                    <p class="text-muted mb-0">No categories have been published for this event yet.</p>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table rd-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th class="text-end">Distance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var cat in ev.Categories)
+                                {
+                                    <tr>
+                                        <td class="fw-semibold">@cat.Name</td>
+                                        <td class="text-end">@(cat.DistanceKm.HasValue ? cat.DistanceKm.Value.ToString("0.##") + " km" : "-")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card rd-card">
+            <div class="card-body p-4">
+                <span class="icon-tile mb-3"><i class="bi bi-ticket-perforated"></i></span>
+                <h5 class="fw-semibold">Enter this event</h5>
+
+                @if (Model.AlreadyEnrolled)
+                {
+                    <p class="text-muted">You are already enrolled for this event.</p>
+                    <span class="rd-badge @StatusBadge(Model.ExistingStatus)">@Model.ExistingStatus</span>
+                    <div class="mt-3">
+                        <a class="btn btn-ghost" asp-action="Enrolments">View my enrolments</a>
+                    </div>
+                }
+                else if (!ev.Categories.Any())
+                {
+                    <p class="text-muted mb-0">Categories are not available yet, so entries are closed for now.</p>
+                }
+                else
+                {
+                    <p class="text-muted">Choose a category and confirm your entry. It is recorded immediately through the API.</p>
+                    <form asp-action="Enrol" asp-route-id="@ev.EventId" method="post" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        <div class="mb-3">
+                            <label asp-for="CategoryId" class="form-label"></label>
+                            <select asp-for="CategoryId" class="form-select">
+                                <option value="">Select a category</option>
+                                @foreach (var cat in ev.Categories)
+                                {
+                                    var label = cat.DistanceKm.HasValue
+                                        ? $"{cat.Name} ({cat.DistanceKm.Value.ToString("0.##")} km)"
+                                        : cat.Name;
+                                    <option value="@cat.CategoryId">@label</option>
+                                }
+                            </select>
+                            <span asp-validation-for="CategoryId" class="small text-danger"></span>
+                        </div>
+                        <button type="submit" class="btn btn-raceday w-100">
+                            <i class="bi bi-check2 me-1"></i> Confirm enrolment
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

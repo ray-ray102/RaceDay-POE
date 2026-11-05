@@ -1,0 +1,71 @@
+@{
+    ViewData["Title"] = "Home";
+}
+<section class="page-hero home-hero">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-6">
+            <span class="hero-pill"><i class="bi bi-flag-fill text-orange"></i> Runs &middot; Walks &middot; Cycles</span>
+            <h1>Race day, <span class="accent">sorted.</span></h1>
+            <p class="lead">Find, enter and track race events. Organisers publish, participants register, all powered by the RaceDay Web API.</p>
+            <div class="d-flex flex-wrap gap-2 mt-4">
+                <a class="btn btn-raceday px-4" asp-controller="Account" asp-action="Register">Get started <i class="bi bi-arrow-right ms-1"></i></a>
+                <a class="btn btn-ghost px-4" asp-controller="Account" asp-action="Login">Log in</a>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <partial name="_MediaSlot" model='("images/hero/home.jpg", "bi-trophy-fill", "hero-media-lg")' />
+        </div>
+    </div>
+</section>
+
+<section class="stats-strip my-4">
+    <div class="row text-center g-3">
+        <div class="col-6 col-md-3"><div class="stat-value">3</div><div class="stat-label">Event types</div></div>
+        <div class="col-6 col-md-3"><div class="stat-value">2</div><div class="stat-label">Roles</div></div>
+        <div class="col-6 col-md-3"><div class="stat-value">1</div><div class="stat-label">Account for every race</div></div>
+        <div class="col-6 col-md-3"><div class="stat-value">24/7</div><div class="stat-label">Online entries</div></div>
+    </div>
+</section>
+
+<section class="py-4">
+    <h2 class="section-title text-center">Pick your discipline</h2>
+    <div class="row g-3">
+        <div class="col-md-4"><div class="event-type-card"><partial name="_MediaSlot" model='("images/home/run.jpg", "bi-person-arms-up", "media-sm")' /><div class="p-3"><h3>Run</h3><p>From fun 5Ks to full marathons.</p></div></div></div>
+        <div class="col-md-4"><div class="event-type-card"><partial name="_MediaSlot" model='("images/home/walk.jpg", "bi-person-walking", "media-sm")' /><div class="p-3"><h3>Walk</h3><p>Community and charity walks for every pace.</p></div></div></div>
+        <div class="col-md-4"><div class="event-type-card"><partial name="_MediaSlot" model='("images/home/cycle.jpg", "bi-bicycle", "media-sm")' /><div class="p-3"><h3>Cycle</h3><p>Road and mountain-bike rides near you.</p></div></div></div>
+    </div>
+</section>
+
+<section class="py-4">
+    <div class="row g-4 align-items-center">
+        <div class="col-lg-5"><partial name="_MediaSlot" model='("images/home/features.jpg", "bi-speedometer2", "")' /></div>
+        <div class="col-lg-7">
+            <h2 class="section-title">Made for both sides of the start line</h2>
+            <div class="row g-3">
+                <div class="col-sm-6"><div class="feature-card"><span class="feature-icon"><i class="bi bi-calendar-plus"></i></span><h3>Create events</h3><p>Organisers publish events with dates, venues and entry limits.</p></div></div>
+                <div class="col-sm-6"><div class="feature-card"><span class="feature-icon"><i class="bi bi-bar-chart-line"></i></span><h3>Live dashboard</h3><p>See upcoming events and entries at a glance.</p></div></div>
+                <div class="col-sm-6"><div class="feature-card"><span class="feature-icon"><i class="bi bi-search"></i></span><h3>Browse races</h3><p>Participants find events that fit their goals.</p></div></div>
+                <div class="col-sm-6"><div class="feature-card"><span class="feature-icon"><i class="bi bi-card-checklist"></i></span><h3>Track entries</h3><p>Every registration in one tidy list.</p></div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-4">
+    <h2 class="section-title text-center">How it works</h2>
+    <div class="row g-3">
+        <div class="col-md-4"><div class="step-card"><span class="step-num">1</span><h3>Create an account</h3><p>Sign up as an Organiser or a Participant.</p></div></div>
+        <div class="col-md-4"><div class="step-card"><span class="step-num">2</span><h3>Publish or browse</h3><p>Organisers list events, participants explore them.</p></div></div>
+        <div class="col-md-4"><div class="step-card"><span class="step-num">3</span><h3>Race day</h3><p>Show up, take part and track your results.</p></div></div>
+    </div>
+</section>
+
+<section class="cta-band my-4" style="background-image:url('@Url.Content("~/images/home/cta.jpg")')">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div>
+            <h2>Ready for your next race?</h2>
+            <p class="mb-0">Join RaceDay today. It only takes a minute.</p>
+        </div>
+        <a class="btn btn-raceday btn-lg px-4" asp-controller="Account" asp-action="Register"><i class="bi bi-person-plus me-1"></i> Create account</a>
+    </div>
+</section>
