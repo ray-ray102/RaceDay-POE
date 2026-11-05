@@ -7,6 +7,7 @@ public static class SessionKeys
     public const string FirstName = "FirstName";
     public const string LastName = "LastName";
     public const string Role = "Role";
+    public const string ProfilePictureUrl = "ProfilePictureUrl";
 
     // The API uses its own session cookie (no JWT), so we keep it per user and send it back on each call
     public const string ApiCookie = "ApiCookie";

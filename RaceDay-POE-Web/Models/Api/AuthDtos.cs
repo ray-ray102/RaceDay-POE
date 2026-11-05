@@ -9,6 +9,7 @@ public class RegisterRequest
     public string Password { get; set; } = string.Empty;
     public string? PhoneNumber { get; set; }
     public string Role { get; set; } = string.Empty;
+    public string? ProfilePictureUrl { get; set; }
 }
 
 // Mirrors DTOs/LoginDto.cs (POST api/auth/login)
@@ -25,6 +26,7 @@ public class AuthResponse
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public string Role { get; set; } = string.Empty;
+    public string? ProfilePictureUrl { get; set; }
 }
 
 // Error body the API returns, e.g. { "message": "This email is already in use." }

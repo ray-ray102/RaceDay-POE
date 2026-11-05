@@ -186,6 +186,10 @@ public class ParticipantController : Controller
             if (updated != null)
             {
                 HttpContext.Session.SetString(SessionKeys.FirstName, updated.FirstName);
+                if (!string.IsNullOrWhiteSpace(updated.ProfilePictureUrl))
+                    HttpContext.Session.SetString(SessionKeys.ProfilePictureUrl, updated.ProfilePictureUrl);
+                else
+                    HttpContext.Session.Remove(SessionKeys.ProfilePictureUrl);
                 model = ProfileFormViewModel.FromDto(updated);
             }
             TempData["Success"] = "Your profile was updated.";
@@ -194,6 +198,46 @@ public class ParticipantController : Controller
 
         await AddApiErrorsAsync(response, "Could not update your profile.");
         return View(model);
+    }
+
+    // POST: /Participant/UploadPicture -> POST api/users/me/picture
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [RequestSizeLimit(3 * 1024 * 1024)]
+    public async Task<IActionResult> UploadPicture(IFormFile? pictureFile)
+    {
+        if (pictureFile == null || pictureFile.Length == 0)
+        {
+            TempData["Error"] = "Please choose an image file to upload.";
+            return RedirectToAction(nameof(Profile));
+        }
+
+        var response = await _api.PostMultipartAsync("api/users/me/picture", pictureFile);
+        if (response.IsSuccessStatusCode)
+        {
+            var updated = await response.Content.ReadFromJsonAsync<UserProfileDto>();
+            if (updated != null && !string.IsNullOrWhiteSpace(updated.ProfilePictureUrl))
+            {
+                HttpContext.Session.SetString(SessionKeys.ProfilePictureUrl, updated.ProfilePictureUrl);
+            }
+            TempData["Success"] = "Profile picture uploaded.";
+            return RedirectToAction(nameof(Profile));
+        }
+
+        try
+        {
+            using var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+            if (doc.RootElement.TryGetProperty("message", out var message))
+            {
+                TempData["Error"] = message.GetString() ?? "Could not upload the profile picture.";
+                return RedirectToAction(nameof(Profile));
+            }
+        }
+        catch (JsonException)
+        {
+        }
+        TempData["Error"] = "Could not upload the profile picture.";
+        return RedirectToAction(nameof(Profile));
     }
 
     private async Task AddApiErrorsAsync(HttpResponseMessage response, string fallback)

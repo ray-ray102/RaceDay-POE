@@ -114,6 +114,33 @@ public class OrganiserController : Controller
         return View("EventForm", model);
     }
 
+    // POST: /Organiser/UploadBanner/5 -> POST api/events/5/banner
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [RequestSizeLimit(3 * 1024 * 1024)]
+    public async Task<IActionResult> UploadBanner(int id, IFormFile? bannerFile)
+    {
+        if (bannerFile == null || bannerFile.Length == 0)
+        {
+            TempData["Error"] = "Please choose an image file to upload.";
+            return RedirectToAction(nameof(Edit), new { id });
+        }
+
+        var response = await _api.PostMultipartAsync($"api/events/{id}/banner", bannerFile);
+        if (response.IsSuccessStatusCode)
+        {
+            TempData["Success"] = "Banner image uploaded.";
+            return RedirectToAction(nameof(Edit), new { id });
+        }
+        if (response.StatusCode == HttpStatusCode.Forbidden)
+            return RedirectToAction("AccessDenied", "Account");
+        if (response.StatusCode == HttpStatusCode.NotFound)
+            return NotFound();
+
+        TempData["Error"] = await ReadApiMessageAsync(response) ?? "Could not upload the banner image.";
+        return RedirectToAction(nameof(Edit), new { id });
+    }
+
     // GET: /Organiser/Delete/5 - confirmation page
     public async Task<IActionResult> Delete(int id)
     {

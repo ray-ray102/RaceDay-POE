@@ -117,6 +117,10 @@ public class AccountController : Controller
         HttpContext.Session.SetString(SessionKeys.FirstName, user.FirstName);
         HttpContext.Session.SetString(SessionKeys.LastName, user.LastName);
         HttpContext.Session.SetString(SessionKeys.Role, user.Role);
+        if (!string.IsNullOrWhiteSpace(user.ProfilePictureUrl))
+            HttpContext.Session.SetString(SessionKeys.ProfilePictureUrl, user.ProfilePictureUrl);
+        else
+            HttpContext.Session.Remove(SessionKeys.ProfilePictureUrl);
 
         if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
         {

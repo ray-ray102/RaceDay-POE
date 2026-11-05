@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using RaceDay_POE_Web.Helpers;
 
@@ -46,6 +47,19 @@ public class RaceDayApiClient
 
     public Task<HttpResponseMessage> DeleteAsync(string path, CancellationToken ct = default)
         => SendAsync(new HttpRequestMessage(HttpMethod.Delete, path), ct);
+
+    // Forwards a browser-uploaded file to the API (MVC never talks to Azure directly)
+    public async Task<HttpResponseMessage> PostMultipartAsync(string path, IFormFile file, string fieldName = "file", CancellationToken ct = default)
+    {
+        var content = new MultipartFormDataContent();
+        var streamContent = new StreamContent(file.OpenReadStream());
+        if (!string.IsNullOrWhiteSpace(file.ContentType))
+        {
+            streamContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+        }
+        content.Add(streamContent, fieldName, file.FileName);
+        return await SendAsync(new HttpRequestMessage(HttpMethod.Post, path) { Content = content }, ct);
+    }
 
     private async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct)
     {
