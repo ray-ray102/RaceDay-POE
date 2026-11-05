@@ -1,0 +1,38 @@
+@model RaceDay_POE_Web.Models.Api.EventResponseDto
+@{
+    ViewData["Title"] = "Delete Event";
+}
+<div class="page-header">
+    <div>
+        <a class="small text-muted" asp-action="Events"><i class="bi bi-arrow-left"></i> Back to My Events</a>
+        <h1 class="mt-2">Delete event</h1>
+        <p>This cannot be undone. Events with enrolments cannot be deleted.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-7">
+        <div class="card rd-card">
+            <div class="card-body p-4">
+                <div class="alert alert-warning mb-4">
+                    <i class="bi bi-exclamation-triangle me-1"></i>
+                    You are about to permanently delete <strong>@Model.Name</strong>.
+                </div>
+                <dl class="row mb-0">
+                    <dt class="col-sm-4 text-muted">Date</dt>
+                    <dd class="col-sm-8">@Model.EventDate.ToString("dd MMM yyyy, HH:mm")</dd>
+                    <dt class="col-sm-4 text-muted">Location</dt>
+                    <dd class="col-sm-8">@Model.Location</dd>
+                    <dt class="col-sm-4 text-muted">Type</dt>
+                    <dd class="col-sm-8">@Model.EventType</dd>
+                    <dt class="col-sm-4 text-muted">Categories</dt>
+                    <dd class="col-sm-8">@Model.Categories.Count</dd>
+                </dl>
+                <form asp-action="Delete" asp-route-id="@Model.EventId" method="post" class="d-flex justify-content-end gap-2 pt-4 mt-3 border-top">
+                    <a class="btn btn-ghost" asp-action="Events">Cancel</a>
+                    <button type="submit" class="btn btn-danger"><i class="bi bi-trash me-1"></i> Delete event</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

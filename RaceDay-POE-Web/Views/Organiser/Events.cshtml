@@ -67,8 +67,14 @@
                                 }
                             </td>
                             <td class="text-end fw-semibold">@ev.EnrolmentCount</td>
-                            <td class="text-end">
-                                <a class="btn btn-ghost btn-sm" asp-action="Edit" asp-route-id="@ev.EventId"><i class="bi bi-pencil"></i> Edit</a>
+                            <td class="text-end text-nowrap">
+                                <div class="btn-group">
+                                    <a class="btn btn-ghost btn-sm" asp-action="Edit" asp-route-id="@ev.EventId" title="Edit"><i class="bi bi-pencil"></i></a>
+                                    <a class="btn btn-ghost btn-sm" asp-action="Categories" asp-route-id="@ev.EventId" title="Categories"><i class="bi bi-tags"></i></a>
+                                    <a class="btn btn-ghost btn-sm" asp-action="Enrolments" asp-route-id="@ev.EventId" title="Enrolments"><i class="bi bi-people"></i></a>
+                                    <a class="btn btn-ghost btn-sm" asp-action="Results" asp-route-id="@ev.EventId" title="Results"><i class="bi bi-trophy"></i></a>
+                                    <a class="btn btn-ghost btn-sm text-danger" asp-action="Delete" asp-route-id="@ev.EventId" title="Delete"><i class="bi bi-trash"></i></a>
+                                </div>
                             </td>
                         </tr>
                     }

@@ -36,21 +36,28 @@
 </div>
 
 <div class="row g-3">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <a asp-action="Events" class="card rd-card rd-card-hover h-100 text-reset"><div class="card-body">
             <span class="icon-tile mb-3"><i class="bi bi-list-ul"></i></span>
             <h5>My Events</h5>
             <p class="text-muted mb-0">
                 @if (next != null) { <text>Next up: <strong>@next.Name</strong> on @next.EventDate.ToString("dd MMM yyyy")</text> }
-                else { <text>View and edit all the races you've published.</text> }
+                else { <text>View, edit and delete the races you've published.</text> }
             </p>
         </div></a>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
         <a asp-action="Create" class="card rd-card rd-card-hover h-100 text-reset"><div class="card-body">
             <span class="icon-tile navy mb-3"><i class="bi bi-plus-circle"></i></span>
             <h5>Create Event</h5>
             <p class="text-muted mb-0">Publish a new run, walk or cycle event.</p>
+        </div></a>
+    </div>
+    <div class="col-md-4">
+        <a asp-action="Events" class="card rd-card rd-card-hover h-100 text-reset"><div class="card-body">
+            <span class="icon-tile teal mb-3"><i class="bi bi-sliders"></i></span>
+            <h5>Manage entries</h5>
+            <p class="text-muted mb-0">Open an event to manage categories, enrolments and results.</p>
         </div></a>
     </div>
 </div>

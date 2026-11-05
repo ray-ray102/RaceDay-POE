@@ -16,29 +16,28 @@
         <div class="card rd-card">
             <div class="card-body p-4">
                 <form asp-action="@action" asp-route-id="@Model.EventId" method="post" novalidate>
-                    <input type="hidden" asp-for="BannerImageUrl" />
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
                     <div class="mb-3">
                         <label asp-for="Name" class="form-label"></label>
                         <input asp-for="Name" class="form-control" placeholder="e.g. Soweto Sunrise 10K" />
-                        <span asp-validation-for="Name" class="small"></span>
+                        <span asp-validation-for="Name" class="small text-danger"></span>
                     </div>
                     <div class="mb-3">
                         <label asp-for="Description" class="form-label"></label>
                         <textarea asp-for="Description" class="form-control" rows="4" placeholder="Route, start point, what to bring..."></textarea>
-                        <span asp-validation-for="Description" class="small"></span>
+                        <span asp-validation-for="Description" class="small text-danger"></span>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label asp-for="EventDate" class="form-label"></label>
                             <input asp-for="EventDate" type="datetime-local" class="form-control" asp-format="{0:yyyy-MM-ddTHH:mm}" />
-                            <span asp-validation-for="EventDate" class="small"></span>
+                            <span asp-validation-for="EventDate" class="small text-danger"></span>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label asp-for="Location" class="form-label"></label>
                             <input asp-for="Location" class="form-control" placeholder="e.g. Johannesburg" />
-                            <span asp-validation-for="Location" class="small"></span>
+                            <span asp-validation-for="Location" class="small text-danger"></span>
                         </div>
                     </div>
                     <div class="row">
@@ -50,12 +49,26 @@
                                 <option value="Walk">Walk</option>
                                 <option value="Cycle">Cycle</option>
                             </select>
-                            <span asp-validation-for="EventType" class="small"></span>
+                            <span asp-validation-for="EventType" class="small text-danger"></span>
                         </div>
-                        <div class="col-md-6 mb-4">
+                        <div class="col-md-6 mb-3">
                             <label asp-for="DistanceKm" class="form-label"></label>
                             <input asp-for="DistanceKm" class="form-control" step="0.01" min="0.01" placeholder="Optional" />
-                            <span asp-validation-for="DistanceKm" class="small"></span>
+                            <span asp-validation-for="DistanceKm" class="small text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="BannerImageUrl" class="form-label">Banner image URL</label>
+                        <input asp-for="BannerImageUrl" class="form-control" placeholder="Saved after Blob upload is wired" />
+                        <span asp-validation-for="BannerImageUrl" class="small text-danger"></span>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Banner image upload</label>
+                        <input type="file" class="form-control" accept="image/*" disabled />
+                        <div class="form-text">
+                            File upload is a placeholder until Azure Blob Storage is connected through the Part 2 API.
+                            The MVC app will never talk to Azure directly.
                         </div>
                     </div>
 
@@ -77,7 +90,8 @@
                 <ul class="small text-muted ps-3 mb-0">
                     <li>Use a clear, searchable name.</li>
                     <li>Participants can filter by type, location and date.</li>
-                    <li>Banner images can be added later.</li>
+                    <li>Add categories after creating the event.</li>
+                    <li>Banner images will upload via Blob Storage later.</li>
                 </ul>
             </div>
         </div>
