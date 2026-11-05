@@ -7,64 +7,35 @@
 ![Part 1 Validation](https://github.com/ray-ray102/RaceDay-POE/actions/workflows/part1-validation.yml/badge.svg)
 ![Part 2 and 3 CI](https://github.com/ray-ray102/RaceDay-POE/actions/workflows/ci.yml/badge.svg)
 
-**Student:** Odirile Masemola  
-**Student number:** ST10441421  
-**Repository:** https://github.com/ray-ray102/RaceDay-POE  
-**Working branch (Part 2 + Part 3):** `poe-full-web-app`
+Odirile Masemola · ST10441421  
+Repo: https://github.com/ray-ray102/RaceDay-POE  
+Branch I worked on for Parts 2 and 3: `poe-full-web-app`
 
-RaceDay is a full-stack web based event management system for the South African road running, walking and cycling community. Organisers create and manage events, categories and results. Participants browse upcoming events, enrol in a category, and track their personal race history.
+RaceDay is a web app for South African road running, walking and cycling events. Organisers put races online and manage entries. Participants browse upcoming events, enrol, and keep an eye on their results.
 
-This Portfolio of Evidence (POE) is delivered in three parts:
+I built this as a Portfolio of Evidence in three parts:
 
-| Part | Focus |
-|------|--------|
-| **Part 1** | System planning: ERD, API endpoint plan, SQL Server schema script |
-| **Part 2** | ASP.NET Core Web API, EF Core, session auth, unit tests, GitHub Actions |
-| **Part 3** | ASP.NET Core MVC web app consuming the API, Azure Blob Storage, Docker |
-
----
-
-## Table of Contents
-
-- [YouTube video](#youtube-video)
-- [User roles](#user-roles)
-- [Architecture](#architecture)
-- [Features](#features)
-- [Application screenshots](#application-screenshots)
-- [Tech stack](#tech-stack)
-- [Repository structure](#repository-structure)
-- [Prerequisites](#prerequisites)
-- [Setup and run](#setup-and-run)
-- [Azure Blob Storage](#azure-blob-storage)
-- [Docker](#docker)
-- [CI/CD](#cicd)
-- [Part 1 deliverables](#part-1-deliverables)
-- [Part 2 API summary](#part-2-api-summary)
-- [Image credits](#image-credits)
-- [References](#references)
-- [Author](#author)
-
----
+1. Part 1 — planning (ERD, API plan, SQL script)
+2. Part 2 — ASP.NET Core Web API with EF Core, session auth, unit tests and GitHub Actions
+3. Part 3 — MVC front end that calls the API, Azure Blob Storage for images, and Docker
 
 ## YouTube video
 
-> **YouTube video: TODO add link**  
-> Unlisted YouTube walkthrough of the running application (MVC structure, Blob Storage, Docker) will be added here before final ARC submission. No AI-generated voiceovers.
+YouTube video: TODO add link
 
----
+I still need to upload the unlisted walkthrough (running app, MVC layout, Blob Storage, Docker). No AI voiceovers.
 
-## User roles
+## Roles
 
-| Role | Capabilities |
-|------|----------------|
-| **Organiser** | Create, edit and delete events; upload event banners; manage categories; view enrolments; capture finish times and positions |
-| **Participant** | Register and log in; browse and filter events; enrol by category; view own enrolments and results; update profile and profile picture |
+There are two roles.
 
-Role-based access is enforced on the API (`SessionAuthorize`) and mirrored in the MVC app with `[RequireLogin]` / `[RequireRole]` and role-specific sidebar navigation.
+Organiser — create, edit and delete events, upload a banner, manage categories, view enrolments, and capture finish times and positions.
 
----
+Participant — register and log in, browse and filter events, enrol in a category, see own enrolments and results, and update profile plus profile picture.
 
-## Architecture
+The API enforces roles with `SessionAuthorize`. The MVC side uses `[RequireLogin]` / `[RequireRole]` and a different sidebar menu per role.
+
+## How it fits together
 
 ```text
 Browser  -->  RaceDay-POE-Web (ASP.NET Core MVC)
@@ -79,11 +50,11 @@ Browser  -->  RaceDay-POE-Web (ASP.NET Core MVC)
               (or LocalDB)          (or Azurite locally)
 ```
 
-- The **MVC project has no direct database access** and does not call Azure. All data and file uploads go through the Part 2 API.
-- Session authentication is established against the API on login; the web app forwards the API session cookie on subsequent requests.
-- Organiser and Participant pages use `_DashboardLayout` (navy sidebar). Public pages (home, about, contact, login, register) keep the standard top navbar.
+The MVC project does not talk to the database or Azure itself. Everything goes through the API. On login the web app gets a session from the API and keeps forwarding that cookie.
 
-### MVC structure (Part 3)
+Logged-in Organiser and Participant pages use `_DashboardLayout` (navy sidebar). Public pages (home, about, contact, login, register) still use the normal top navbar.
+
+MVC layout in short:
 
 ```text
 RaceDay-POE-Web/
@@ -95,44 +66,24 @@ RaceDay-POE-Web/
     Shared/        _Layout, _DashboardLayout, _MediaSlot
     Organiser/     Dashboard, Events, EventForm, Categories, Enrolments, Results, Delete
     Participant/   Dashboard, Events, EventDetails, Enrolments, Results, Profile
-  wwwroot/         CSS (navy/orange theme), images, Bootstrap
+  wwwroot/         CSS (navy/orange), images, Bootstrap
 ```
 
----
+## What each role can do
 
-## Features
+Organiser: dashboard with stats and recent events; full event CRUD (name, description, date, location, distance, type Run/Walk/Cycle); banner upload on edit; categories; enrolment list with status updates (Pending / Confirmed / Cancelled); results entry (finish time and position).
 
-### Organiser
+Participant: browse with type, location and date filters; event detail and enrol; My Enrolments with colour-coded statuses; My Results with finish time and position (and total finishers when the API returns it); profile edit and picture upload.
 
-- Dashboard with event counts, upcoming/completed stats, total entries and recent events
-- Full event CRUD (name, description, date, location, distance, type: Run / Walk / Cycle)
-- Banner image upload when editing an event
-- Category management per event (age / distance bands)
-- Enrolment list with status updates (Pending / Confirmed / Cancelled)
-- Results capture: finish time and finishing position
+Public: home, about, contact, register (pick a role), login.
 
-### Participant
-
-- Browse upcoming events with type, location and date filters
-- Event detail with categories and enrol action
-- My Enrolments with colour-coded status badges
-- My Results with finish time and position (including total finishers where available)
-- Profile edit and profile picture upload
-
-### Public
-
-- Branded home, about and contact pages
-- Register (choose Organiser or Participant) and login
-
----
-
-## Application screenshots
+## Screenshots
 
 Public home:
 
 ![Public home](docs/images/public-home.jpg)
 
-Organiser dashboard (sidebar layout):
+Organiser dashboard:
 
 ![Organiser dashboard](docs/images/organiser-dashboard.png)
 
@@ -140,69 +91,48 @@ Participant dashboard:
 
 ![Participant dashboard](docs/images/participant-dashboard.png)
 
-Sidebar active state (subtle grey highlight):
+Sidebar active state:
 
 ![Sidebar active](docs/images/sidebar-active.png)
 
-Mobile offcanvas menu:
+Mobile menu:
 
 ![Mobile sidebar](docs/images/mobile-sidebar.png)
 
----
-
 ## Tech stack
 
-- **.NET 8** — ASP.NET Core Web API and MVC
-- **Entity Framework Core** — SQL Server (code-first migrations)
-- **Session authentication** — hashed passwords (`PasswordHasher`)
-- **Swagger** — API exploration in Development
-- **xUnit** — API unit tests (EF InMemory)
-- **Azure Blob Storage** — event banners and profile pictures (Azurite for local demo)
-- **Bootstrap 5 + Bootstrap Icons** — responsive UI (navy `#1b1f3b`, orange `#ff5a1f`)
-- **Docker** — multi-stage container images
-- **GitHub Actions** — restore, build API + Web, run API tests
+.NET 8 (Web API + MVC), Entity Framework Core with SQL Server, session auth with hashed passwords, Swagger in Development, xUnit tests, Azure Blob Storage (Azurite for local work), Bootstrap 5 and Bootstrap Icons, Docker multi-stage images, GitHub Actions. UI colours are navy `#1b1f3b` and orange `#ff5a1f`.
 
----
-
-## Repository structure
+## Folder layout
 
 ```text
 RaceDay-POE/
 ├── .github/workflows/
-│   ├── part1-validation.yml      # Part 1 docs structure checks
-│   └── ci.yml                    # Part 2 and 3 build + API tests
+│   ├── part1-validation.yml
+│   └── ci.yml
 ├── docs/
 │   ├── ERD.png
 │   ├── API-Endpoint-Plan.md
 │   ├── RaceDay-Schema.sql
-│   ├── images/                   # README screenshots + CI green capture
-│   ├── workflow-run.png          # earlier Part 1 CI evidence
-│   └── part2-ci-run.png          # earlier Part 2 CI evidence
-├── RaceDay-POE-API/              # Part 2 Web API
-├── RaceDay-POE-API.Tests/        # xUnit tests
-├── RaceDay-POE-Web/              # Part 3 MVC
-├── Dockerfile                    # Web multi-stage image
-├── Dockerfile.api                # Optional API image
+│   ├── images/
+│   ├── workflow-run.png
+│   └── part2-ci-run.png
+├── RaceDay-POE-API/
+├── RaceDay-POE-API.Tests/
+├── RaceDay-POE-Web/
+├── Dockerfile
+├── Dockerfile.api
 ├── RaceDay-POE-API.sln
 └── README.md
 ```
 
----
+## What you need installed
 
-## Prerequisites
+.NET 8 SDK, SQL Server (LocalDB is fine), EF tools (`dotnet tool install --global dotnet-ef`), and Git. For image uploads locally, Node.js helps so you can run Azurite with `npx`. Docker is optional if you want containers.
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- SQL Server (LocalDB with Visual Studio, Express, or full SQL Server)
-- [EF Core tools](https://learn.microsoft.com/ef/core/cli/dotnet): `dotnet tool install --global dotnet-ef`
-- Git
-- Optional for Blob local demo: [Node.js](https://nodejs.org/) (to run Azurite via `npx`)
-- Optional for containers: [Docker](https://docs.docker.com/get-docker/)
+## Setup
 
----
-
-## Setup and run
-
-### 1. Clone
+Clone and switch to the working branch:
 
 ```bash
 git clone https://github.com/ray-ray102/RaceDay-POE.git
@@ -210,7 +140,7 @@ cd RaceDay-POE
 git checkout poe-full-web-app
 ```
 
-### 2. Configure SQL Server
+### Database
 
 Default connection string in `RaceDay-POE-API/appsettings.json`:
 
@@ -218,9 +148,7 @@ Default connection string in `RaceDay-POE-API/appsettings.json`:
 Server=(localdb)\MSSQLLocalDB;Database=RaceDayPOEDB;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True
 ```
 
-Update `ConnectionStrings:RaceDayConnection` if you use a different SQL Server instance.
-
-Apply EF Core migrations:
+Change `ConnectionStrings:RaceDayConnection` if your SQL Server is different, then apply migrations:
 
 ```bash
 cd RaceDay-POE-API
@@ -228,11 +156,11 @@ dotnet ef database update
 cd ..
 ```
 
-(Alternatively, Part 1 script `docs/RaceDay-Schema.sql` can create a matching schema in SSMS for reference; the running API uses the EF migrations.)
+`docs/RaceDay-Schema.sql` is the Part 1 SSMS script for reference. The running API uses the EF migrations.
 
-### 3. Configure Blob Storage (user-secrets)
+### Blob storage secret
 
-Do **not** commit real Azure keys. Prefer user-secrets for the API project:
+Do not commit real Azure keys. For local Azurite:
 
 ```bash
 cd RaceDay-POE-API
@@ -241,56 +169,50 @@ dotnet user-secrets set "ConnectionStrings:AzureBlobStorage" "UseDevelopmentStor
 cd ..
 ```
 
-For a real Azure Storage account later, set the same key to your account connection string (see [Azure Blob Storage](#azure-blob-storage)).
-
-### 4. Start Azurite (local Blob emulator)
+### Azurite
 
 ```bash
 npx azurite --silent --location ./azurite --blobHost 127.0.0.1 --blobPort 10000
 ```
 
-Leave this running while testing banner and profile uploads. Development config already defaults to `UseDevelopmentStorage=true`.
+Leave that running while you test banner and profile uploads. Development config already defaults to `UseDevelopmentStorage=true`.
 
-### 5. Run the API
+### API
 
 ```bash
 cd RaceDay-POE-API
 dotnet run --urls http://localhost:5141
 ```
 
-Open Swagger at `http://localhost:5141/swagger`.
+Swagger: `http://localhost:5141/swagger`
 
-### 6. Run the MVC web app
+### Web app
 
-Point the web app at the API base URL (`ApiSettings:BaseUrl`):
+`ApiSettings:BaseUrl` should point at the API (default `http://localhost:5141/` in `RaceDay-POE-Web/appsettings.json`):
 
 ```bash
 cd RaceDay-POE-Web
 dotnet run --urls http://localhost:5027
 ```
 
-Or override without editing files:
+Or override from the repo root:
 
 ```bash
 dotnet run --urls http://localhost:5027 --project RaceDay-POE-Web \
   -- --ApiSettings:BaseUrl=http://localhost:5141/
 ```
 
-Open `http://localhost:5027`. Register a new Organiser or Participant account (or log in with an account you already created).
+Open `http://localhost:5027` and register an Organiser or Participant account.
 
-### 7. Run API unit tests
+### Tests
 
 ```bash
 dotnet test RaceDay-POE-API.sln
 ```
 
----
-
 ## Azure Blob Storage
 
-Blob Storage is integrated **only in the Part 2 API**. The MVC app never talks to Azure (or Azurite) directly. The browser uploads a file to the MVC site as multipart form data; the web project forwards that stream to the API; the API validates the file, uploads via `IBlobStorageService`, and saves the returned public URL on the event or user entity.
-
-### Upload flow
+Blob Storage lives only in the API. The MVC app never talks to Azure or Azurite. The browser posts a file to the web app, the web app forwards it to the API, the API checks the file, uploads through `IBlobStorageService`, and stores the public URL on the event or user.
 
 ```mermaid
 sequenceDiagram
@@ -312,78 +234,50 @@ sequenceDiagram
   MVC-->>Browser: page re-render; img src uses stored URL
 ```
 
-| Upload | MVC action | API endpoint | Container (config) |
-|--------|------------|--------------|--------------------|
-| Event banner | Organiser edit / upload banner | `POST /api/events/{id}/banner` | `BlobStorage:BannersContainer` (default `raceday-banners`) |
-| Profile picture | Participant Profile | `POST /api/users/me/picture` | `BlobStorage:ProfilesContainer` (default `raceday-profiles`) |
+Event banners go through Organiser edit to `POST /api/events/{id}/banner` into `BlobStorage:BannersContainer` (default `raceday-banners`). Profile pictures go through Participant Profile to `POST /api/users/me/picture` into `BlobStorage:ProfilesContainer` (default `raceday-profiles`).
 
-### Validation
+`ImageUploadValidator` allows `image/jpeg`, `image/jpg`, `image/png`, `image/webp`, max 2 MB. Bad files get a 400 with a normal message.
 
-`ImageUploadValidator` on the API accepts:
+Containers are created with public blob access so pages can use a normal `<img src="...">`. The URL is saved as `BannerImageUrl` or `ProfilePictureUrl`.
 
-- Content types: `image/jpeg`, `image/jpg`, `image/png`, `image/webp`
-- Max size: **2 MB**
+Config keys:
 
-Invalid files return `400 Bad Request` with a clear message (no raw exception text to the user).
+- `ConnectionStrings:AzureBlobStorage` — preferred connection string (user-secrets / env)
+- `BlobStorage:ConnectionString` — fallback (defaults to `UseDevelopmentStorage=true` in Development)
+- `BlobStorage:BannersContainer` / `BlobStorage:ProfilesContainer` — container names
 
-### Public blob URLs
+`BlobStorageService` reads `ConnectionStrings:AzureBlobStorage` first, then the fallback.
 
-Containers are created with **public blob access** so the MVC views can use ordinary `<img src="...">` tags against the stored URL. The URL string is persisted on the entity (`BannerImageUrl` / `ProfilePictureUrl`).
+### Local demo (Azurite)
 
-### Configuration keys
+I ran the demo with Azurite only — no real Azure account. Start Azurite, keep `UseDevelopmentStorage=true`, run API + web, upload a banner or picture in the UI. The URL lands in SQL and the image loads in the browser.
 
-| Key | Purpose |
-|-----|---------|
-| `ConnectionStrings:AzureBlobStorage` | Preferred connection string (user-secrets / env / container env) |
-| `BlobStorage:ConnectionString` | Fallback (defaults to `UseDevelopmentStorage=true` in Development) |
-| `BlobStorage:BannersContainer` | Banner container name |
-| `BlobStorage:ProfilesContainer` | Profile picture container name |
+### Real Azure Storage
 
-`BlobStorageService` reads `ConnectionStrings:AzureBlobStorage` first, then falls back to `BlobStorage:ConnectionString`.
+Create a Storage Account, then set the connection string without committing it:
 
-### Local development (Azurite) — how the demo was run
+```bash
+cd RaceDay-POE-API
+dotnet user-secrets set "ConnectionStrings:AzureBlobStorage" "<your-azure-storage-connection-string>"
+```
 
-This project's local demo used **Azurite only**. No real Azure Storage account or paid cloud credentials were required.
+Or with an environment variable:
 
-1. Start Azurite (see Setup step 4).
-2. Keep `UseDevelopmentStorage=true` via user-secrets or `appsettings.Development.json`.
-3. Run API + Web; upload a banner or profile picture through the UI.
-4. Images are stored under the Azurite blob endpoint and the public URL is saved in SQL.
+```bash
+export ConnectionStrings__AzureBlobStorage="<your-azure-storage-connection-string>"
+```
 
-### Switching to a real Azure Storage Account
-
-1. Create a Storage Account in the Azure portal and copy the connection string.
-2. Store it with user-secrets (recommended) or an environment variable — never commit it:
-
-   ```bash
-   cd RaceDay-POE-API
-   dotnet user-secrets set "ConnectionStrings:AzureBlobStorage" "<your-azure-storage-connection-string>"
-   ```
-
-   Or when running in Docker / hosting:
-
-   ```bash
-   export ConnectionStrings__AzureBlobStorage="<your-azure-storage-connection-string>"
-   ```
-
-3. Restart the API. Containers `raceday-banners` and `raceday-profiles` are created on first upload if they do not exist.
-4. Confirm uploaded image URLs open in the browser and appear on event / profile pages.
-
----
+Restart the API. Containers `raceday-banners` and `raceday-profiles` are created on first upload if needed.
 
 ## Docker
 
-The MVC web application is containerised with a multi-stage .NET 8 Dockerfile at the repository root. The API has a matching `Dockerfile.api` if you want to run both in containers.
-
-### Build the web image
+Web image (multi-stage Dockerfile at the repo root):
 
 ```bash
 docker build -t raceday-web -f Dockerfile .
 ```
 
-### Run the web container
-
-Point the container at a reachable RaceDay API with `ApiSettings__BaseUrl` (the MVC app never talks to the database or Azure directly):
+Run it against an API you already have running:
 
 ```bash
 docker run --rm -p 8080:8080 \
@@ -391,9 +285,9 @@ docker run --rm -p 8080:8080 \
   raceday-web
 ```
 
-Then open `http://localhost:8080`. On Linux you may need `--add-host=host.docker.internal:host-gateway` so the container can reach an API running on the host.
+Then open `http://localhost:8080`. On Linux you may need `--add-host=host.docker.internal:host-gateway`.
 
-### Optional: API image
+Optional API image:
 
 ```bash
 docker build -t raceday-api -f Dockerfile.api .
@@ -403,94 +297,54 @@ docker run --rm -p 5141:8080 \
   raceday-api
 ```
 
----
-
 ## CI/CD
 
-GitHub Actions workflows:
+`.github/workflows/part1-validation.yml` checks that the Part 1 docs and README are in place.
 
-| Workflow | File | What it does |
-|----------|------|----------------|
-| Part 1 Validation | `.github/workflows/part1-validation.yml` | Checks `/docs` planning files and README |
-| Part 2 and 3 CI | `.github/workflows/ci.yml` | Restores and builds API + tests + MVC Web; runs API unit tests |
+`.github/workflows/ci.yml` restores and builds the API, tests and MVC web, then runs the API unit tests. It runs on pushes to `main`, `part-2*`, `part-3*`, `final*` and `poe*` branches, and on PRs to `main`.
 
-The Part 2 and 3 workflow runs on pushes to `main`, `part-2*`, `part-3*`, `final*` and `poe*` branches, and on pull requests to `main`.
-
-### Successful CI build
-
-Screenshot of a green **Part 2 and 3 CI** run on branch `poe-full-web-app`:
+Green Part 2 and 3 CI run:
 
 ![Successful Part 2 and 3 CI run](docs/images/ci-green.png)
 
-Earlier evidence is also kept at `docs/workflow-run.png` (Part 1) and `docs/part2-ci-run.png` (Part 2 era).
+Older screenshots: `docs/workflow-run.png` (Part 1) and `docs/part2-ci-run.png`.
 
----
+## Part 1 files
 
-## Part 1 deliverables
+- `docs/ERD.png` — ERD for Roles, Users, Events, Categories, Enrolments, Results
+- `docs/API-Endpoint-Plan.md` — method, route, role, body, responses
+- `docs/RaceDay-Schema.sql` — SQL Server create + seed script
 
-| File | Description |
-|------|-------------|
-| `docs/ERD.png` | Entity Relationship Diagram (Roles, Users, Events, Categories, Enrolments, Results) |
-| `docs/API-Endpoint-Plan.md` | Endpoint plan: method, route, role, body, responses |
-| `docs/RaceDay-Schema.sql` | SQL Server create + seed script aligned with the ERD |
+Design choices: six tables; events owned by one Organiser (`OrganiserId`); enrolments link Participant + Event + Category with status Pending / Confirmed / Cancelled; results are one-to-one with enrolments (`FinishTime`, `FinishPosition`).
 
-### Design notes
+## Part 2 API (short list)
 
-- Six tables: Roles, Users, Events, Categories, Enrolments, Results
-- Events owned by one Organiser (`OrganiserId`)
-- Enrolments link Participant + Event + Category; status Pending / Confirmed / Cancelled
-- Results are one-to-one with Enrolments (`FinishTime`, `FinishPosition`)
+Auth: `POST /api/auth/register`, `login`, `logout` (public).  
+Users: `GET/PUT /api/users/me`, `POST /api/users/me/picture` (logged in).  
+Events: public `GET`; Organiser create/update/delete, `GET /api/events/mine`, `POST /api/events/{id}/banner`.  
+Categories: public read; Organiser write.  
+Enrolments: Participant enrol / mine; Organiser list + status.  
+Results: Organiser capture/update/delete; Participant `GET /api/results/mine`.
 
----
-
-## Part 2 API summary
-
-| Area | Endpoints | Role |
-|------|-----------|------|
-| Auth | `POST /api/auth/register`, `login`, `logout` | Public |
-| Users | `GET/PUT /api/users/me`, `POST /api/users/me/picture` | Logged in |
-| Events | `GET /api/events`, `GET /api/events/{id}` | Public |
-| Events | `POST/PUT/DELETE`, `GET /api/events/mine`, `POST /api/events/{id}/banner` | Organiser |
-| Categories | Public read; Organiser create/update/delete | Mixed |
-| Enrolments | Participant enrol / mine; Organiser list + status | Mixed |
-| Results | Organiser capture/update/delete; Participant `GET /api/results/mine` | Mixed |
-
-Full detail: `docs/API-Endpoint-Plan.md` and Swagger UI.
-
----
+Full detail is in `docs/API-Endpoint-Plan.md` and Swagger.
 
 ## Image credits
 
-Photos used on the public site:
+Magnific: [cross country](https://www.magnific.com/free-photo/different-people-participating-cross-country_20283238.htm), [team ready for race](https://www.magnific.com/free-photo/team-diverse-people-ready-race_2826771.htm) (rawpixel.com), [cheerful runners](https://www.magnific.com/free-photo/cheerful-runners-having-fun-while-participating-race-nature_26346847.htm) (Drazen Zigic).
 
-**Magnific**
-
-- [different people participating cross country](https://www.magnific.com/free-photo/different-people-participating-cross-country_20283238.htm)
-- [team diverse people ready race](https://www.magnific.com/free-photo/team-diverse-people-ready-race_2826771.htm) (rawpixel.com)
-- [cheerful runners](https://www.magnific.com/free-photo/cheerful-runners-having-fun-while-participating-race-nature_26346847.htm) (Drazen Zigic)
-
-**Unsplash**
-
-- [Olek Buzunov](https://unsplash.com/photos/people-walking-in-charity-run-OFsKQCFI9SE)
-- [Markus Spiske](https://unsplash.com/photos/group-of-cyclist-on-asphalt-road-WUehAgqO5hE)
-- [Daniel Romero](https://unsplash.com/photos/a-crowd-gathers-at-the-statesman-cap10k-race-qOhho1nnUVQ)
-- [lucas Favre](https://unsplash.com/photos/silhouette-photo-of-a-person-running-on-road-JnoNcfFwrNA)
-
----
+Unsplash: [Olek Buzunov](https://unsplash.com/photos/people-walking-in-charity-run-OFsKQCFI9SE), [Markus Spiske](https://unsplash.com/photos/group-of-cyclist-on-asphalt-road-WUehAgqO5hE), [Daniel Romero](https://unsplash.com/photos/a-crowd-gathers-at-the-statesman-cap10k-race-qOhho1nnUVQ), [lucas Favre](https://unsplash.com/photos/silhouette-photo-of-a-person-running-on-road-JnoNcfFwrNA).
 
 ## References
 
-- Microsoft Learn — [ASP.NET Core](https://learn.microsoft.com/aspnet/core/), [EF Core](https://learn.microsoft.com/ef/core/), [Session state](https://learn.microsoft.com/aspnet/core/fundamentals/app-state)
-- Microsoft Learn — [Azure Blob Storage](https://learn.microsoft.com/azure/storage/blobs/) and [Azurite](https://learn.microsoft.com/azure/storage/common/storage-use-azurite)
-- [Docker docs](https://docs.docker.com/) — multi-stage .NET images
+- Microsoft Learn: [ASP.NET Core](https://learn.microsoft.com/aspnet/core/), [EF Core](https://learn.microsoft.com/ef/core/), [Session state](https://learn.microsoft.com/aspnet/core/fundamentals/app-state)
+- [Azure Blob Storage](https://learn.microsoft.com/azure/storage/blobs/) and [Azurite](https://learn.microsoft.com/azure/storage/common/storage-use-azurite)
+- [Docker docs](https://docs.docker.com/)
 - [Bootstrap 5](https://getbootstrap.com/docs/5.3/) and [Bootstrap Icons](https://icons.getbootstrap.com/)
 - [xUnit](https://xunit.net/) and [GitHub Actions](https://docs.github.com/actions)
-- Unsplash and Magnific — stock photography (see Image credits)
-
----
+- Unsplash and Magnific for the photos above
 
 ## Author
 
-**Odirile Masemola**  
-Student number: **ST10441421**  
-Module: Automation of Web Applications (POE Parts 1–3)
+Odirile Masemola  
+Student number: ST10441421  
+Automation of Web Applications — POE Parts 1 to 3
