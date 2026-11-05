@@ -1,7 +1,7 @@
 # RaceDay - Event Management Platform
 
 ![Part 1 Validation](https://github.com/ray-ray102/RaceDay-POE/actions/workflows/part1-validation.yml/badge.svg)
-![Part 2 CI](https://github.com/ray-ray102/RaceDay-POE/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/ray-ray102/RaceDay-POE/actions/workflows/ci.yml/badge.svg)
 
 RaceDay is a full-stack web based event management system designed for the South African road running, walking and cycling community. Many local events can still rely on paper registration and spreadsheets, so RaceDay is planned to bring these processes online. Event Organisers will be able to create and manage events, categories and participant results, while Participants will be able to browse upcoming events, enter events, and track their personal performance history.
 
@@ -25,6 +25,7 @@ This repository contains the Portfolio of Evidence (POE) for the RaceDay project
 - [GitHub and Commit History](#github-and-commit-history)
 - [CI/CD](#cicd)
 - [Part 2 - RaceDay API](#part-2---raceday-api)
+- [Docker](#docker)
 - [Author](#author)
 
 ## User Roles
@@ -273,13 +274,47 @@ dotnet test RaceDay-POE-API.sln
 
 ### Part 2 CI
 
-The workflow `.github/workflows/ci.yml` restores, builds and tests the solution on every push to `main`, `part-2*`, `part-3*` and `final*` branches, and on pull requests to `main`. Any new projects added to the solution in the final POE are picked up automatically.
+The workflow `.github/workflows/ci.yml` restores and builds the full solution (API, tests and MVC web), then runs the API unit tests on every push to `main`, `part-2*`, `part-3*`, `final*` and `poe*` branches, and on pull requests to `main`.
 
 ### Successful Part 2 CI Build
 
 The screenshot below shows a successful run of the Part 2 CI workflow, which restores, builds and tests the solution:
 
 <img src="docs/part2-ci-run.png" alt="Successful Part 2 CI workflow run" width="700" />
+
+
+## Docker
+
+The MVC web application is containerised with a multi-stage .NET 8 Dockerfile at the repository root. The API has a matching `Dockerfile.api` if you want to run both in containers.
+
+### Build the web image
+
+```bash
+docker build -t raceday-web -f Dockerfile .
+```
+
+### Run the web container
+
+Point the container at a reachable RaceDay API with `ApiSettings__BaseUrl` (the MVC app never talks to the database or Azure directly):
+
+```bash
+docker run --rm -p 8080:8080 \
+  -e ApiSettings__BaseUrl=http://host.docker.internal:5141/ \
+  raceday-web
+```
+
+Then open `http://localhost:8080`. On Linux you may need `--add-host=host.docker.internal:host-gateway` so the container can reach an API running on the host.
+
+### Optional: API image
+
+```bash
+docker build -t raceday-api -f Dockerfile.api .
+docker run --rm -p 5141:8080 \
+  -e ConnectionStrings__RaceDayConnection="<your-sql-server-connection-string>" \
+  -e ConnectionStrings__AzureBlobStorage="<your-azure-or-azurite-connection-string>" \
+  raceday-api
+```
+
 
 ## Author
 
