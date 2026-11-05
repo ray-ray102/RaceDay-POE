@@ -281,21 +281,21 @@ Blob Storage lives only in the API. The MVC app never talks to Azure or Azurite.
 ```mermaid
 sequenceDiagram
   participant Browser
-  participant MVC as RaceDay-POE-Web
-  participant API as RaceDay-POE-API
-  participant Blob as IBlobStorageService
-  participant Store as Azure Blob / Azurite
+  participant MVC as RaceDay Web
+  participant API as RaceDay API
+  participant Blob as Blob Service
+  participant Store as Blob Store
 
-  Browser->>MVC: multipart POST (banner or picture file)
-  MVC->>API: forward multipart to API endpoint
-  API->>API: ImageUploadValidator (type + size)
-  API->>Blob: UploadAsync(stream, contentType, container, name)
-  Blob->>Store: Put blob (public container access)
+  Browser->>MVC: multipart POST banner or picture
+  MVC->>API: forward multipart to API
+  API->>API: validate type and size
+  API->>Blob: upload stream to container
+  Blob->>Store: put blob with public access
   Store-->>Blob: blob URI
   Blob-->>API: public URL
-  API->>API: save URL on Event.BannerImageUrl / User.ProfilePictureUrl
+  API->>API: save URL on event or user
   API-->>MVC: JSON with updated URL
-  MVC-->>Browser: page re-render; img src uses stored URL
+  MVC-->>Browser: render page with image URL
 ```
 
 Event banners go through Organiser edit to `POST /api/events/{id}/banner` into `BlobStorage:BannersContainer` (default `raceday-banners`). Profile pictures go through Participant Profile to `POST /api/users/me/picture` into `BlobStorage:ProfilesContainer` (default `raceday-profiles`).
