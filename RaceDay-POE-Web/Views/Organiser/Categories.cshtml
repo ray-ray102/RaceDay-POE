@@ -1,0 +1,114 @@
+@model RaceDay_POE_Web.Models.Organiser.CategoriesPageViewModel
+@{
+    ViewData["Title"] = "Categories";
+    var ev = Model.Event;
+    var form = Model.Form;
+}
+<div class="page-header">
+    <div>
+        <a class="small text-muted" asp-action="Events"><i class="bi bi-arrow-left"></i> Back to My Events</a>
+        <div class="eyebrow mt-2">Organiser</div>
+        <h1>Categories</h1>
+        <p>Age or distance categories for <strong>@ev.Name</strong>.</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card rd-card overflow-hidden">
+            @if (!Model.Categories.Any())
+            {
+                <div class="empty-state">
+                    <div class="empty-icon"><i class="bi bi-tags"></i></div>
+                    <h5>No categories yet</h5>
+                    <p>Add at least one category so participants can enter this event.</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table rd-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Age range</th>
+                                <th class="text-end">Distance</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var cat in Model.Categories)
+                            {
+                                var age = (cat.MinAge, cat.MaxAge) switch
+                                {
+                                    (null, null) => "Any",
+                                    (int min, null) => $"{min}+",
+                                    (null, int max) => $"Under {max + 1}",
+                                    (int min, int max) => $"{min}-{max}"
+                                };
+                                <tr>
+                                    <td>
+                                        <div class="fw-semibold">@cat.Name</div>
+                                        @if (!string.IsNullOrWhiteSpace(cat.Description))
+                                        {
+                                            <div class="small text-muted">@cat.Description</div>
+                                        }
+                                    </td>
+                                    <td>@age</td>
+                                    <td class="text-end">@(cat.DistanceKm.HasValue ? cat.DistanceKm.Value.ToString("0.##") + " km" : "-")</td>
+                                    <td class="text-end text-nowrap">
+                                        <a class="btn btn-ghost btn-sm" asp-action="EditCategory" asp-route-id="@cat.CategoryId"><i class="bi bi-pencil"></i></a>
+                                        <form asp-action="DeleteCategory" method="post" class="d-inline" onsubmit="return confirm('Delete this category?');">
+                                            <input type="hidden" name="id" value="@cat.CategoryId" />
+                                            <input type="hidden" name="eventId" value="@ev.EventId" />
+                                            <button type="submit" class="btn btn-ghost btn-sm text-danger" title="Delete"><i class="bi bi-trash"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card rd-card">
+            <div class="card-body p-4">
+                <span class="icon-tile mb-3"><i class="bi bi-plus-lg"></i></span>
+                <h5 class="fw-semibold">Add category</h5>
+                <form asp-action="AddCategory" asp-route-id="@ev.EventId" method="post" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                    <div class="mb-3">
+                        <label asp-for="Form.Name" class="form-label"></label>
+                        <input asp-for="Form.Name" name="Name" class="form-control" placeholder="e.g. 10km Open" />
+                        <span asp-validation-for="Form.Name" class="small text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Form.Description" class="form-label"></label>
+                        <input asp-for="Form.Description" name="Description" class="form-control" placeholder="Optional" />
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label asp-for="Form.MinAge" class="form-label"></label>
+                            <input asp-for="Form.MinAge" name="MinAge" class="form-control" />
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label asp-for="Form.MaxAge" class="form-label"></label>
+                            <input asp-for="Form.MaxAge" name="MaxAge" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label asp-for="Form.DistanceKm" class="form-label"></label>
+                        <input asp-for="Form.DistanceKm" name="DistanceKm" class="form-control" step="0.01" />
+                    </div>
+                    <button type="submit" class="btn btn-raceday w-100"><i class="bi bi-plus-lg me-1"></i> Add category</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
