@@ -24,7 +24,7 @@ namespace RaceDay_POE_API.Tests
         {
             var context = TestHelper.CreateContext();
             var organiser = TestHelper.AddUser(context, "org@test.com", 1);
-            var controller = new EventsController(context);
+            var controller = TestHelper.CreateEventsController(context);
             TestHelper.SetUser(controller, organiser.UserId, RoleNames.Organiser);
 
             var result = await controller.CreateEvent(NewEvent());
@@ -37,7 +37,7 @@ namespace RaceDay_POE_API.Tests
         public async Task GetEvent_UnknownId_Returns404()
         {
             var context = TestHelper.CreateContext();
-            var controller = new EventsController(context);
+            var controller = TestHelper.CreateEventsController(context);
             TestHelper.SetUser(controller);
 
             var result = await controller.GetEvent(999);
@@ -51,7 +51,7 @@ namespace RaceDay_POE_API.Tests
             var context = TestHelper.CreateContext();
             var organiser = TestHelper.AddUser(context, "org@test.com", 1);
             TestHelper.AddEvent(context, organiser.UserId);
-            var controller = new EventsController(context);
+            var controller = TestHelper.CreateEventsController(context);
             TestHelper.SetUser(controller, organiser.UserId, RoleNames.Organiser);
             await controller.CreateEvent(NewEvent());
 
@@ -70,7 +70,7 @@ namespace RaceDay_POE_API.Tests
             var owner = TestHelper.AddUser(context, "owner@test.com", 1);
             var other = TestHelper.AddUser(context, "other@test.com", 1);
             var ev = TestHelper.AddEvent(context, owner.UserId);
-            var controller = new EventsController(context);
+            var controller = TestHelper.CreateEventsController(context);
             TestHelper.SetUser(controller, other.UserId, RoleNames.Organiser);
 
             var result = await controller.UpdateEvent(ev.EventId, NewEvent());
@@ -84,7 +84,7 @@ namespace RaceDay_POE_API.Tests
             var context = TestHelper.CreateContext();
             var owner = TestHelper.AddUser(context, "owner@test.com", 1);
             var ev = TestHelper.AddEvent(context, owner.UserId);
-            var controller = new EventsController(context);
+            var controller = TestHelper.CreateEventsController(context);
             TestHelper.SetUser(controller, owner.UserId, RoleNames.Organiser);
 
             var result = await controller.DeleteEvent(ev.EventId);
@@ -103,7 +103,7 @@ namespace RaceDay_POE_API.Tests
             var category = TestHelper.AddCategory(context, ev.EventId);
             context.Enrolments.Add(new Models.Enrolment { ParticipantId = participant.UserId, EventId = ev.EventId, CategoryId = category.CategoryId });
             context.SaveChanges();
-            var controller = new EventsController(context);
+            var controller = TestHelper.CreateEventsController(context);
             TestHelper.SetUser(controller, owner.UserId, RoleNames.Organiser);
 
             var result = await controller.DeleteEvent(ev.EventId);
