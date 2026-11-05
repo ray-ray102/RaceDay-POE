@@ -7,5 +7,6 @@ namespace RaceDay_POE_API.DTOs
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
+        public string? ProfilePictureUrl { get; set; }
     }
 }

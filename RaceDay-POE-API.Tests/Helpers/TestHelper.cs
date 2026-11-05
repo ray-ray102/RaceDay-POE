@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using RaceDay_POE_API.Data;
 using RaceDay_POE_API.Helpers;
 using RaceDay_POE_API.Models;
+using Microsoft.Extensions.Options;
+using RaceDay_POE_API.Configuration;
+using RaceDay_POE_API.Controllers;
 using RaceDay_POE_API.Services;
 
 namespace RaceDay_POE_API.Tests.Helpers
@@ -86,6 +89,26 @@ namespace RaceDay_POE_API.Tests.Helpers
                 StatusCodeResult s => s.StatusCode,
                 _ => null
             };
+        }
+
+        public static IOptions<BlobStorageOptions> BlobOptions()
+        {
+            return Options.Create(new BlobStorageOptions
+            {
+                ConnectionString = "UseDevelopmentStorage=true",
+                BannersContainer = "raceday-banners",
+                ProfilesContainer = "raceday-profiles"
+            });
+        }
+
+        public static EventsController CreateEventsController(RaceDayDbContext context, IBlobStorageService? blobs = null)
+        {
+            return new EventsController(context, blobs ?? new FakeBlobStorageService(), BlobOptions());
+        }
+
+        public static UsersController CreateUsersController(RaceDayDbContext context, IBlobStorageService? blobs = null)
+        {
+            return new UsersController(context, blobs ?? new FakeBlobStorageService(), BlobOptions());
         }
     }
 }

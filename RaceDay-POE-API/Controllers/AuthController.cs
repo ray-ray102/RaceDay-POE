@@ -62,7 +62,8 @@ namespace RaceDay_POE_API.Controllers
                 UserId = user.UserId,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Role = role.RoleName
+                Role = role.RoleName,
+                ProfilePictureUrl = user.ProfilePictureUrl
             };
 
             return StatusCode(StatusCodes.Status201Created, response);
@@ -94,7 +95,8 @@ namespace RaceDay_POE_API.Controllers
                 UserId = user.UserId,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Role = user.Role.RoleName
+                Role = user.Role.RoleName,
+                ProfilePictureUrl = user.ProfilePictureUrl
             });
         }
 
