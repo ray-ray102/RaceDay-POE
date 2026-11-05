@@ -7,8 +7,8 @@
 ![Part 1 Validation](https://github.com/ray-ray102/RaceDay-POE/actions/workflows/part1-validation.yml/badge.svg)
 ![Part 2 and 3 CI](https://github.com/ray-ray102/RaceDay-POE/actions/workflows/ci.yml/badge.svg)
 
-**Student:** Odirile Masemola  
-**Student number:** ST10441421  
+**Student:** Raesibe Betty Lelaka 
+**Student number:** ST10485428 
 **Repository:** https://github.com/ray-ray102/RaceDay-POE  
 **Working branch (Part 2 + Part 3):** `poe-full-web-app`
 
@@ -491,6 +491,6 @@ Photos used on the public site:
 
 ## Author
 
-**Odirile Masemola**  
-Student number: **ST10441421**  
+**Raesibe Betty Lelaka**  
+Student number: **ST10485428**  
 Module: Automation of Web Applications (POE Parts 1–3)
