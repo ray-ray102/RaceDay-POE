@@ -140,6 +140,7 @@ a:hover { color: var(--raceday-primary); }
 .rd-badge-green { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
 .rd-badge-gray { background: #f1f5f9; color: #475569; border-color: #e2e8f0; }
 .rd-badge-teal { background: #e6faf7; color: #00796b; border-color: #b2efe6; }
+.rd-badge-amber { background: #fffbeb; color: #b45309; border-color: #fde68a; }
 
 /* ---------- Empty states ---------- */
 .empty-state { text-align: center; padding: 3.5rem 1.5rem; }

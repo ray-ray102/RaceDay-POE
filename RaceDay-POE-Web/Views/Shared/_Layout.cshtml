@@ -53,8 +53,10 @@
                         else if (isSignedIn && signedInRole == RoleNames.Participant)
                         {
                             <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="Dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="Dashboard" title="Coming soon"><i class="bi bi-search"></i> Browse Events</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="Dashboard" title="Coming soon"><i class="bi bi-card-checklist"></i> My Registrations</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="Events"><i class="bi bi-search"></i> Browse Events</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="Enrolments"><i class="bi bi-card-checklist"></i> My Enrolments</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="Results"><i class="bi bi-trophy"></i> My Results</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Participant" asp-action="Profile"><i class="bi bi-person"></i> Profile</a></li>
                         }
                         <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                         <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
