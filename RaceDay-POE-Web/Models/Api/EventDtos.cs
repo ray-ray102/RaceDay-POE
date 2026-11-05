@@ -13,7 +13,15 @@ public class OrganiserEventDto
     public bool IsUpcoming => EventDate >= DateTime.Now;
 }
 
-// Mirrors EventResponseDto (GET api/events/{id})
+// Short category shape nested inside EventResponseDto
+public class CategorySummaryDto
+{
+    public int CategoryId { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public decimal? DistanceKm { get; set; }
+}
+
+// Mirrors EventResponseDto (GET api/events, GET api/events/{id})
 public class EventResponseDto
 {
     public int EventId { get; set; }
@@ -25,6 +33,7 @@ public class EventResponseDto
     public decimal? DistanceKm { get; set; }
     public string EventType { get; set; } = string.Empty;
     public string? BannerImageUrl { get; set; }
+    public List<CategorySummaryDto> Categories { get; set; } = new();
 }
 
 // Mirrors EventRequestDto (POST api/events, PUT api/events/{id})
