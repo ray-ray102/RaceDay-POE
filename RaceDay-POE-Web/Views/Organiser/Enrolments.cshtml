@@ -61,18 +61,13 @@
                                     <form asp-action="UpdateEnrolmentStatus" method="post" class="d-inline-flex gap-2 align-items-center justify-content-end">
                                         <input type="hidden" name="enrolmentId" value="@en.EnrolmentId" />
                                         <input type="hidden" name="eventId" value="@ev.EventId" />
-                                        <select name="status" class="form-select form-select-sm" style="width:auto;min-width:8rem">
-                                            @if (en.Status == "Pending")
+                                        <select name="status" class="form-select form-select-sm" style="width:auto;min-width:8rem" required>
+                                            <option value="">Choose...</option>
+                                            @if (en.Status != "Confirmed")
                                             {
-                                                <option value="Pending" selected>Pending</option>
-                                                <option value="Confirmed">Confirmed</option>
-                                                <option value="Cancelled">Cancelled</option>
+                                                <option value="Confirmed">Confirm</option>
                                             }
-                                            else if (en.Status == "Confirmed")
-                                            {
-                                                <option value="Confirmed" selected>Confirmed</option>
-                                                <option value="Cancelled">Cancelled</option>
-                                            }
+                                            <option value="Cancelled">Cancel</option>
                                         </select>
                                         <button type="submit" class="btn btn-ghost btn-sm">Save</button>
                                     </form>
